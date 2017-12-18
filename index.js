@@ -1,5 +1,4 @@
 const deletedDiff = require('deep-object-diff').deletedDiff;
-const fs = require('fs');
 
 let globalObjectCache;
 
@@ -68,15 +67,3 @@ const generateReport = global => {
 };
 
 export default generateReport;
-
-export const saveReport = () => {
-  const report = globalObjectCache.reduxReport.get();
-  if (!fs || !report) throw new Error('Could not save redux use report');
-
-  ['used', 'unused'].forEach(descriptor => {
-    fs.writeFile(`./redux_report--${descriptor}.json`, JSON.stringify(report[descriptor]), err => {
-      if (err) throw err;
-      console.log(`The ${descriptor} redux report has been saved!`);
-    });
-  });
-};
