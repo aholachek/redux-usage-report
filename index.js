@@ -1,69 +1,43 @@
-const deletedDiff = require('deep-object-diff').deletedDiff;
+const isFunction = x => typeof x === 'function'
+const isObjectOrArray = x => x === Object(x) && !isFunction(x)
 
-let globalObjectCache;
+export const createProxyHandler = shouldSkipProxy => accessedProperties => (stateLocation = '') => {
+  return {
+    get (target, propKey) {
+      const value = Reflect.get(target, propKey)
+      if (isFunction(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value
 
-const generateReport = global => {
-  globalObjectCache = globalObjectCache || global;
-  global.reduxReport = global.reduxReport || {
-    accessedState: {},
-    state: {},
-    get() {
-      global.reduxReport.__inProgress = true;
-      const report = {
-        used: this.accessedState,
-        unused: deletedDiff(this.state, this.accessedState)
-      };
-      global.reduxReport.__inProgress = false;
-      return report;
-    }
-  };
+      const accessedPropertiesPointer = !stateLocation
+        ? accessedProperties
+        : stateLocation.split('.').reduce((acc, key) => {
+          return acc[key]
+        }, accessedProperties)
 
-  return rootReducer => (prevState, action) => {
-    const reducerInProgress = false;
-
-    function handler(stateLocation = '') {
-      return {
-        get(target, propKey) {
-          if (
-            !target.hasOwnProperty(propKey) ||
-            global.reduxReport.__inProgress ||
-            global.reduxReport.__reducerInProgress
-          ) {
-            return Reflect.get(target, propKey);
-          }
-
-          const accessedStatePointer = !stateLocation
-            ? window.reduxReport.accessedState
-            : stateLocation.split('.').reduce((acc, key) => {
-              return acc[key];
-            }, window.reduxReport.accessedState);
-
-          const value = Reflect.get(target, propKey);
-
-          if (value === Object(value) && !(typeof value === 'function')) {
-            accessedStatePointer[propKey] = accessedStatePointer[propKey]
-              ? accessedStatePointer[propKey]
-              : Array.isArray(value) ? [] : {};
-            const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey;
-            return makeProxy(value, newStateLocation);
-          }
-          // keep "state" using original values
-          if (accessedStatePointer[propKey] === undefined) accessedStatePointer[propKey] = value;
-          return value;
+      if (isObjectOrArray(value)) {
+        if (accessedPropertiesPointer[propKey] === undefined) {
+          accessedPropertiesPointer[propKey] = Array.isArray(value) ? [] : {}
         }
-      };
+        const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
+        return makeProxy(value, newStateLocation)
+      }
+      // use original object values
+      if (accessedPropertiesPointer[propKey] === undefined) {
+        accessedPropertiesPointer[propKey] = value
+      }
+      return value
     }
+  }
+}
 
-    function makeProxy(obj, accessedStatePointer) {
-      return new Proxy(obj, handler(accessedStatePointer));
-    }
-    global.reduxReport.__reducerInProgress = true;
-    const state = rootReducer(prevState, action);
-    global.reduxReport.__reducerInProgress = false;
-    const proxiedState = makeProxy(state);
-    global.reduxReport.state = proxiedState;
-    return proxiedState;
-  };
-};
+export const createMakeProxyFunction = handler => (obj, accessedPropertiesPointer) => {
+  return new Proxy(obj, handler(accessedPropertiesPointer))
+}
 
-export default generateReport;
+export default function trackObjectUse (obj) {
+  const accessedProperties = {}
+  const handler = createProxyHandler()(accessedProperties)
+  const makeProxy = createMakeProxyFunction(handler)
+
+  const trackedObject = makeProxy(obj)
+  return { trackedObject, accessedProperties }
+}
