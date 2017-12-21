@@ -1,4 +1,4 @@
-import { createMakeProxyFunction } from './index'
+import { createMakeProxyFunction } from './trackObjectUse'
 import { deletedDiff } from 'deep-object-diff'
 
 let globalObjectCache
