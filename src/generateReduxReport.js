@@ -14,9 +14,9 @@ const shouldSkipProxy = (target, propKey) => {
   return false
 }
 
-const makeProxy = createMakeProxyFunction(shouldSkipProxy)(global.reduxReport.accessedState)
-
 export default function generateReduxReport (global) {
+  const makeProxy = createMakeProxyFunction(shouldSkipProxy)(global.reduxReport.accessedState)
+
   globalObjectCache = globalObjectCache || global
   global.reduxReport = global.reduxReport || {
     accessedState: {},
