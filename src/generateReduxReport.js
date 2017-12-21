@@ -15,8 +15,6 @@ const shouldSkipProxy = (target, propKey) => {
 }
 
 function generateReduxReport (global) {
-  const makeProxy = createMakeProxyFunction(shouldSkipProxy)(global.reduxReport.accessedState)
-
   globalObjectCache = globalObjectCache || global
   global.reduxReport = global.reduxReport || {
     accessedState: {},
@@ -31,6 +29,7 @@ function generateReduxReport (global) {
       return report
     }
   }
+  const makeProxy = createMakeProxyFunction(shouldSkipProxy)(global.reduxReport.accessedState)
 
   return rootReducer => (prevState, action) => {
     global.reduxReport.__reducerInProgress = true
