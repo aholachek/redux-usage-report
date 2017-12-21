@@ -1,5 +1,5 @@
-const deletedDiff = require("deep-object-diff").deletedDiff
-import { makeProxy, createProxyHandler } from "./index"
+import { createMakeProxyFunction } from './index'
+import { deletedDiff } from 'deep-object-diff'
 
 let globalObjectCache
 
@@ -14,14 +14,14 @@ const shouldSkipProxy = (target, propKey) => {
   return false
 }
 
-const handler = createProxyHandler(shouldSkipProxy)(global.reduxReport.accessedState)
+const makeProxy = createMakeProxyFunction(shouldSkipProxy)(global.reduxReport.accessedState)
 
-export default function generateReduxReport(global) {
+export default function generateReduxReport (global) {
   globalObjectCache = globalObjectCache || global
   global.reduxReport = global.reduxReport || {
     accessedState: {},
     state: {},
-    generate() {
+    generate () {
       global.reduxReport.__inProgress = true
       const report = {
         used: this.accessedState,
