@@ -10,7 +10,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "deep-object-diff": "^1.0.4"
+    "deep-object-diff": "^1.0.4",
+    "fs": "^0.0.1-security"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
