@@ -22,6 +22,24 @@ describe('trackObjectUse', () => {
     expect(accessedProperties).toEqual(expected)
   })
 
+  it('does not contain unaccessed nested properties of accessed parent properties ', () => {
+    const obj = {
+      a: [1, 2, 3, 4],
+      b: {
+        e: [1, 2, 3, 4],
+        c: { d: [1, 2, 3, 4] }
+      }
+    }
+    const { trackedObject, accessedProperties } = trackObjectUse(obj)
+
+    const access1 = trackedObject.a[0]
+    const access2 = trackedObject.b.c.d[2]
+
+    const expected = { a: [1], b: { c: { d: [undefined, undefined, 3] } } }
+
+    expect(accessedProperties).toEqual(expected)
+  })
+
   it('ignores sets, and only tracks gets', () => {
     const toTrack = JSON.parse(JSON.stringify(obj))
     const { trackedObject, accessedProperties } = trackObjectUse(toTrack)

@@ -9,7 +9,7 @@ export const createMakeProxyFunction = ({
   return function makeProxy (obj, stateLocation = '') {
     const handler = {
       get (target, propKey) {
-        const value = Reflect.get(target, propKey)
+        const value = target[propKey]
         if (!isUndefined(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value
 
         const accessedPropertiesPointer = !stateLocation
