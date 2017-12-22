@@ -1,12 +1,16 @@
-const isFunction = x => typeof x === 'function'
-const isObjectOrArray = x => x === Object(x) && !isFunction(x)
+const isObjectOrArray = x => x === Object(x) && typeof x !== 'function'
+const isUndefined = x => x === undefined
 
-export const createMakeProxyFunction = shouldSkipProxy => accessedProperties => {
+export const createMakeProxyFunction = ({
+  keepOriginalValues = false,
+  shouldSkipProxy,
+  accessedProperties
+}) => {
   return function makeProxy (obj, stateLocation = '') {
     const handler = {
       get (target, propKey) {
         const value = Reflect.get(target, propKey)
-        if (isFunction(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value
+        if (!isUndefined(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value
 
         const accessedPropertiesPointer = !stateLocation
           ? accessedProperties
@@ -15,14 +19,14 @@ export const createMakeProxyFunction = shouldSkipProxy => accessedProperties => 
           }, accessedProperties)
 
         if (isObjectOrArray(value)) {
-          if (accessedPropertiesPointer[propKey] === undefined) {
+          if (!accessedPropertiesPointer[propKey]) {
             accessedPropertiesPointer[propKey] = Array.isArray(value) ? [] : {}
           }
-          const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
+          var newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
           return makeProxy(value, newStateLocation)
         } else {
           // use original object values, don't update them if they change
-          if (accessedPropertiesPointer[propKey] === undefined) {
+          if (isUndefined(accessedPropertiesPointer[propKey]) || !keepOriginalValues) {
             accessedPropertiesPointer[propKey] = value
           }
           return value
@@ -33,9 +37,9 @@ export const createMakeProxyFunction = shouldSkipProxy => accessedProperties => 
   }
 }
 
-export default function trackObjectUse (obj) {
+export default function trackObjectUse (obj, { keepOriginalValues = true } = {}) {
   const accessedProperties = {}
-  const makeProxy = createMakeProxyFunction()(accessedProperties)
+  const makeProxy = createMakeProxyFunction({ accessedProperties, keepOriginalValues })
   const trackedObject = makeProxy(obj)
   return { trackedObject, accessedProperties }
 }

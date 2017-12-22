@@ -29,7 +29,11 @@ function generateReduxReport (global) {
       return report
     }
   }
-  const makeProxy = createMakeProxyFunction(shouldSkipProxy)(global.reduxReport.accessedState)
+
+  const makeProxy = createMakeProxyFunction({
+    shouldSkipProxy,
+    accessedProperties: global.reduxReport.accessedState
+  })
 
   return rootReducer => (prevState, action) => {
     global.reduxReport.__reducerInProgress = true
