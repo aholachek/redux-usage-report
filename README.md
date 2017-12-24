@@ -59,7 +59,7 @@ describe('a complex item selector', () => {
 ```
 Then remove the object tracking code from the test use the new, smaller stub data file for the test.
 
-By default, `trackObjectUse` keeps the accessedProperties object as close as possible to the original state of the tracked object. If you'd like the accessedProperties to update as the tracked object is updated you can pass in an option:
+By default, `trackObjectUse` keeps the `accessedProperties` object as close as possible to the original state of the `trackedObject`. If you'd like `accessedProperties` to update as the `trackedObject` is updated you can pass in an option:
 
 ```
 const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginalValues : false})
