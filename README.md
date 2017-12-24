@@ -1,4 +1,4 @@
-## Redux Usage Report
+# Redux Usage Report
 
 This library allows you to replace a generic object with a proxied object and track which parts of the object are accessed. I made it to help me track which parts of the store were actually being used on various parts of a large Redux application.
 
@@ -8,11 +8,11 @@ It exports two functions: the generic helper `trackObjectUse`, and `generateRedu
 
 They make use of ES2015 proxy functionality to record when an object property is accessed.
 
-`yarn install redux-usage-report`
+**To install:** `yarn install redux-usage-report`
 
-### 1. Simple Object Wrapper: `trackObjectUse`
+## 1. Simple Object Wrapper: `trackObjectUse`
 
-#### Basic Example:
+### Basic Example:
 ```
 import {trackObjectUse} from 'redux-usage-report'
 
@@ -33,13 +33,13 @@ console.log(accessedProperties)
 // { a: [1], b: { c: { d: [undefined, undefined, 3] } } }
 ```
 
-By default it keeps the accessedProperties object as close as possible to the original state of the tracked object. If you'd like the accessedProperties to update as the tracked object is updated you can pass in an option:
+By default it keeps the `accessedProperties` object as close as possible to the original state of the `trackedObject`. If you'd like `accessedProperties` to update as `trackedObject` is updated you can pass in an option:
 
 ```
 const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginalValues : false})
 ```
 
-#### Generate Stub Data Example:
+### Generate Stub Data Example:
 
 First, record the minimum object required by the test:
 ```
@@ -57,17 +57,11 @@ describe('a complex item selector', () => {
   })
 })
 ```
-Then remove the object tracking code from the test use the new, smaller stub data file for the test.
+Then remove the object tracking code from the test and use the new, smaller stub data file instead of the original stub data.
 
-By default, `trackObjectUse` keeps the `accessedProperties` object as close as possible to the original state of the `trackedObject`. If you'd like `accessedProperties` to update as the `trackedObject` is updated you can pass in an option:
+## 2. Redux Store Usage Tracker: `generateReduxReport`
 
-```
-const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginalValues : false})
-```
-
-### 2. Redux Store Usage Tracker: `generateReduxReport`
-
-#### Example:
+### Example:
 ```
 import { generateReduxReport } from 'redux-usage-report';
 import { combineReducers } from 'redux';
@@ -99,5 +93,5 @@ You can peruse the `unused` object to see which parts of state might (possibly, 
 
 Definitely don't use in production!
 
-### Disclaimer
+## Disclaimer
 This was built for a specific use case and doesn't handle a multitude of edge cases.
