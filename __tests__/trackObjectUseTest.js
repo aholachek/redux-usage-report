@@ -1,4 +1,5 @@
-import trackObjectUse from '../src/trackObjectUse'
+import { trackObjectUse } from '../src/index'
+import saveReport from '../src/saveReport'
 
 describe('trackObjectUse', () => {
   const obj = {
@@ -51,4 +52,5 @@ describe('trackObjectUse', () => {
 
     expect(accessedProperties).toEqual({ b: { c: { d: [1, undefined, undefined, 4] } } })
   })
+
 })

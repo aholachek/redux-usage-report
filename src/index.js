@@ -1,2 +1,2 @@
 export { default as generateReduxReport } from './generateReduxReport'
-import { default as trackObjectUse } from './trackObjectUse'
+export { default as trackObjectUse } from './trackObjectUse'

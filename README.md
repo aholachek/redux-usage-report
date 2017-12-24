@@ -8,9 +8,11 @@ It exports two functions: the generic helper `trackObjectUse`, and `generateRedu
 
 They make use of ES2015 proxy functionality to record when an object property is accessed.
 
+`yarn install redux-usage-report`
+
 ### 1. Simple Object Wrapper: `trackObjectUse`
 
-#### Example:
+#### Basic Example:
 ```
 import {trackObjectUse} from 'redux-usage-report'
 
@@ -36,6 +38,33 @@ By default it keeps the accessedProperties object as close as possible to the or
 ```
 const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginalValues : false})
 ```
+
+#### Generate Stub Data Example:
+
+First, record the minimum object required by the test:
+```
+import {trackObjectUse} from 'redux-usage-report'
+import hugeStubData from './stubData.json'
+
+describe('a complex item selector', () => {
+  it('returns some item', () => {
+    const { trackedObject, accessedProperties } = trackObjectUse(hugeStubData)
+    const result = complexItemSelector(trackedObject, { itemId })
+
+    fs.writeFile(`./minimal_stub_data.json`, JSON.stringify(accessedProperties), err => {
+      if (err) throw err
+    })
+  })
+})
+```
+Then remove the object tracking code from the test use the new, smaller stub data file for the test.
+
+By default, `trackObjectUse` keeps the accessedProperties object as close as possible to the original state of the tracked object. If you'd like the accessedProperties to update as the tracked object is updated you can pass in an option:
+
+```
+const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginalValues : false})
+```
+
 ### 2. Redux Store Usage Tracker: `generateReduxReport`
 
 #### Example:
