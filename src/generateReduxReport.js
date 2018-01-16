@@ -1,5 +1,17 @@
+import { diff } from 'deep-object-diff'
+import { isObjectOrArray } from './utility'
 import { createMakeProxyFunction } from './trackObjectUse'
-import { deletedDiff } from 'deep-object-diff'
+
+// so that JSON.stringify doesn't remove all undefined fields
+function replaceUndefinedWithNull (obj) {
+  Object.keys(obj).forEach(k => {
+    const val = obj[k]
+    if (val === undefined) { obj[k] = null }
+    if (isObjectOrArray(val)) {
+      replaceUndefinedWithNull(val)
+    }
+  })
+}
 
 let globalObjectCache
 
@@ -21,9 +33,13 @@ function generateReduxReport (global) {
     state: {},
     generate () {
       global.reduxReport.__inProgress = true
+      const used = JSON.parse(JSON.stringify(this.accessedState))
+      const stateCopy = JSON.parse(JSON.stringify(this.state))
+      const unused = diff(stateCopy, used)
+      replaceUndefinedWithNull(unused)
       const report = {
-        used: this.accessedState,
-        unused: deletedDiff(this.state, this.accessedState)
+        used,
+        unused
       }
       global.reduxReport.__inProgress = false
       return report

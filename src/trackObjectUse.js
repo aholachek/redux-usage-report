@@ -1,5 +1,4 @@
-const isObjectOrArray = x => x === Object(x) && typeof x !== 'function'
-const isUndefined = x => x === undefined
+import { isObjectOrArray, isUndefined } from './utility'
 
 export const createMakeProxyFunction = ({
   keepOriginalValues = false,

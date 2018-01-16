@@ -14,7 +14,7 @@ They make use of ES2015 proxy functionality to record when an object property is
 
 ### Basic Example:
 ```
-import {trackObjectUse} from 'redux-usage-report'
+import { trackObjectUse } from 'redux-usage-report'
 
 const obj = {
   a: [1, 2, 3, 4],
@@ -43,7 +43,8 @@ const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginal
 
 First, record the minimum object required by the test:
 ```
-import {trackObjectUse} from 'redux-usage-report'
+import fs from 'fs'
+import { trackObjectUse } from 'redux-usage-report'
 import hugeStubData from './stubData.json'
 
 describe('a complex item selector', () => {
@@ -57,6 +58,7 @@ describe('a complex item selector', () => {
   })
 })
 ```
+
 Then remove the object tracking code from the test and use the new, smaller stub data file instead of the original stub data.
 
 ## 2. Redux Store Usage Tracker: `generateReduxReport`
@@ -91,7 +93,10 @@ Once your rootReducer is wrapped, you open up your console when the app is runni
 ```
 You can peruse the `unused` object to see which parts of state might (possibly, not necessarily) be redundant for that part of the app.
 
-Definitely don't use in production!
+This can also be used to create a stubdata object for Redux integration tests as demoed in [this test](./__tests__/generateReduxReportTest.js)
+
+Definitely don't use this library in production!
 
 ## Disclaimer
-This was built for a specific use case and doesn't handle a multitude of edge cases.
+
+There are a bunch of edge cases that are not handled particularly well at the moment...

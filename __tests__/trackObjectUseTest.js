@@ -1,5 +1,4 @@
 import { trackObjectUse } from '../src/index'
-import saveReport from '../src/saveReport'
 
 describe('trackObjectUse', () => {
   const obj = {
