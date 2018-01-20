@@ -13,7 +13,7 @@ const rootReducer = (state = {}, action) => {
   }
 }
 
-const wrappedReducer = generateReduxReport(window)(rootReducer)
+const wrappedReducer = generateReduxReport(window, rootReducer, ['a.b.c'])
 
 const getStore = (initialState) => createStore(wrappedReducer, JSON.parse(JSON.stringify(initialState)))
 
@@ -37,7 +37,7 @@ describe('generateReduxReport', () => {
 
   it('should track accessed properties', () => {
     const store = getStore(mockStore)
-    
+
     // access some properties
     const val1 = store.getState().a.b.c[2]
     const val2 = store.getState().f.slice(0, 1)

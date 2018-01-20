@@ -6,7 +6,9 @@ import { createMakeProxyFunction } from './trackObjectUse'
 function replaceUndefinedWithNull (obj) {
   Object.keys(obj).forEach(k => {
     const val = obj[k]
-    if (val === undefined) { obj[k] = null }
+    if (val === undefined) {
+      obj[k] = null
+    }
     if (isObjectOrArray(val)) {
       replaceUndefinedWithNull(val)
     }
@@ -26,7 +28,7 @@ const shouldSkipProxy = (target, propKey) => {
   return false
 }
 
-function generateReduxReport (global) {
+function generateReduxReport (global, rootReducer, debuggerPoints = []) {
   globalObjectCache = globalObjectCache || global
   global.reduxReport = global.reduxReport || {
     accessedState: {},
@@ -48,10 +50,11 @@ function generateReduxReport (global) {
 
   const makeProxy = createMakeProxyFunction({
     shouldSkipProxy,
-    accessedProperties: global.reduxReport.accessedState
+    accessedProperties: global.reduxReport.accessedState,
+    debuggerPoints
   })
 
-  return rootReducer => (prevState, action) => {
+  return (prevState, action) => {
     global.reduxReport.__reducerInProgress = true
     const state = rootReducer(prevState, action)
     global.reduxReport.__reducerInProgress = false

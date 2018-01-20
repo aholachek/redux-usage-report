@@ -4,7 +4,7 @@
   "description": "",
   "main": "lib/index.js",
   "scripts": {
-    "test": "jest --config=.jestconfig",
+    "test": "jest",
     "build": "babel src -d lib"
   },
   "author": "",
@@ -25,5 +25,10 @@
     "eslint-plugin-standard": "^3.0.1",
     "jest": "^22.0.1",
     "redux": "^3.7.2"
+  },
+  "jest" : {
+    "transform": {
+        "^.+\\.jsx?$": "babel-jest"
+      }
   }
 }

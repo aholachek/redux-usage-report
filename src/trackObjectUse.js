@@ -3,13 +3,17 @@ import { isObjectOrArray, isUndefined } from './utility'
 export const createMakeProxyFunction = ({
   keepOriginalValues = false,
   shouldSkipProxy,
-  accessedProperties
+  accessedProperties,
+  debuggerPoints = []
 }) => {
   return function makeProxy (obj, stateLocation = '') {
     const handler = {
       get (target, propKey) {
         const value = target[propKey]
         if (!isUndefined(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value
+        if (debuggerPoints.find(p => p === stateLocation)) {
+          debugger
+        }
 
         const accessedPropertiesPointer = !stateLocation
           ? accessedProperties
@@ -24,7 +28,6 @@ export const createMakeProxyFunction = ({
           var newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
           return makeProxy(value, newStateLocation)
         } else {
-          // use original object values, don't update them if they change
           if (isUndefined(accessedPropertiesPointer[propKey]) || !keepOriginalValues) {
             accessedPropertiesPointer[propKey] = value
           }
