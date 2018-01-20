@@ -63,7 +63,7 @@ Then remove the object tracking code from the test and use the new, smaller stub
 
 ## 2. Redux Store Usage Tracker: `generateReduxReport`
 
-### Example:
+### Basic Example:
 ```
 import { generateReduxReport } from 'redux-usage-report';
 import { combineReducers } from 'redux';
@@ -74,9 +74,8 @@ const rootReducer = combineReducers({
 });
 
 if (process.env.NODE_ENV === 'development') {
-  // provide reference to the global object
-  const reportGenerator = generateReduxReport(window)
-  export default reportGenerator(rootReducer);
+  // provide reference to the global object as the first argument
+  export default generateReduxReport(window, rootReducer);
 } else {
   export default rootReducer
 }
@@ -93,7 +92,31 @@ Once your rootReducer is wrapped, you open up your console when the app is runni
 ```
 You can peruse the `unused` object to see which parts of state might (possibly, not necessarily) be redundant for that part of the app.
 
-This can also be used to create a stubdata object for Redux integration tests as demoed in [this test](./__tests__/generateReduxReportTest.js)
+### Debugging Example
+
+When you use the `reduxReport.generate` function, you might want to see why certain parts of the store are marked `used`. It's possible that they are accessed simply as a side effect, for instance when doing a deep comparison of state in a `PureComponent` or something similar.
+In order to investigate further, you can provide a third argument to `generateReduxReport`:  an array of redux paths that, when accessed, should trigger a debugger statement so that you can explore the call stack. The paths should be in the form:
+
+```
+"a.b.c.2.d"
+```
+With index arrays provided as numbers.
+
+Here's an example from a real project:
+
+```
+if (process.env.NODE_ENV === 'development') {
+  export default generateReduxReport(window, rootReducer, ['entities.contentItemProgresses.byUuid.0e0b97415ab7bc4a061cf703dff8d93a.started']);
+}
+```
+
+You can then proceed to check out the functions in the call stack to see when this value is actually getting accessed in your application:
+
+![screenshot of chrome devtools](./dev_tools_screenshot.png)
+
+### Integration Test Stub Data
+
+Finally, `reduxReport.generate` can also be used to create a stubdata object for Redux integration tests as demoed in [this test](./__tests__/generateReduxReportTest.js)
 
 Definitely don't use this library in production!
 
