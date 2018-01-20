@@ -13,7 +13,7 @@ const rootReducer = (state = {}, action) => {
   }
 }
 
-const wrappedReducer = generateReduxReport(window, rootReducer, ['a.b.c'])
+const wrappedReducer = generateReduxReport(window, rootReducer, ['a.b.c.2'])
 
 const getStore = (initialState) => createStore(wrappedReducer, JSON.parse(JSON.stringify(initialState)))
 

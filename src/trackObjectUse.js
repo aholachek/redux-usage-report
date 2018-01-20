@@ -11,9 +11,6 @@ export const createMakeProxyFunction = ({
       get (target, propKey) {
         const value = target[propKey]
         if (!isUndefined(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value
-        if (debuggerPoints.find(p => p === stateLocation)) {
-          debugger
-        }
 
         const accessedPropertiesPointer = !stateLocation
           ? accessedProperties
@@ -21,11 +18,15 @@ export const createMakeProxyFunction = ({
             return acc[key]
           }, accessedProperties)
 
+        const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
+        // to allow people to examine the stack at certain access points
+        if (debuggerPoints.find(p => p === newStateLocation)) {
+          debugger
+        }
         if (isObjectOrArray(value)) {
           if (!accessedPropertiesPointer[propKey]) {
             accessedPropertiesPointer[propKey] = Array.isArray(value) ? [] : {}
           }
-          var newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
           return makeProxy(value, newStateLocation)
         } else {
           if (isUndefined(accessedPropertiesPointer[propKey]) || !keepOriginalValues) {
