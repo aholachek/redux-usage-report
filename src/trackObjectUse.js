@@ -21,6 +21,7 @@ export const createMakeProxyFunction = ({
         const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
         // to allow people to examine the stack at certain access points
         if (debuggerPoints.find(p => p === newStateLocation)) {
+          // don't remove this debugger statement!!
           debugger
         }
         if (isObjectOrArray(value)) {
