@@ -10,6 +10,8 @@ var _utility = require('./utility');
 
 var _trackObjectUse = require('./trackObjectUse');
 
+var localStorageKey = 'reduxUsageReportBreakpoints';
+
 // so that JSON.stringify doesn't remove all undefined fields
 function replaceUndefinedWithNull(obj) {
   Object.keys(obj).forEach(function (k) {
@@ -39,6 +41,15 @@ function generateReduxReport(global, rootReducer) {
   global.reduxReport = global.reduxReport || {
     accessedState: {},
     state: {},
+    setBreakpoints: function setBreakpoints(breakpoints) {
+      breakpoints = Array.isArray(breakpoints) ? breakpoints : [breakpoints];
+      if (!global.localStorage) return;
+      global.localStorage.setItem(localStorageKey, breakpoints);
+    },
+    clearBreakpoints: function clearBreakpoints() {
+      if (!global.localStorage) return;
+      global.localStorage.setItem(localStorageKey, null);
+    },
     generate: function generate() {
       global.reduxReport.__inProgress = true;
       var used = JSON.parse(JSON.stringify(this.accessedState));
@@ -57,7 +68,7 @@ function generateReduxReport(global, rootReducer) {
   var makeProxy = (0, _trackObjectUse.createMakeProxyFunction)({
     shouldSkipProxy: shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
-    debuggerPoints: debuggerPoints
+    debuggerPoints: global.localStorage && global.localStorage.getItem(localStorageKey) || []
   });
 
   return function (prevState, action) {

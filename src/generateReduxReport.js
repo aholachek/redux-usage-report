@@ -2,6 +2,8 @@ import { diff } from 'deep-object-diff'
 import { isObjectOrArray } from './utility'
 import { createMakeProxyFunction } from './trackObjectUse'
 
+const localStorageKey = 'reduxUsageReportBreakpoints'
+
 // so that JSON.stringify doesn't remove all undefined fields
 function replaceUndefinedWithNull (obj) {
   Object.keys(obj).forEach(k => {
@@ -33,6 +35,15 @@ function generateReduxReport (global, rootReducer, debuggerPoints = []) {
   global.reduxReport = global.reduxReport || {
     accessedState: {},
     state: {},
+    setBreakpoints: function (breakpoints) {
+      breakpoints = Array.isArray(breakpoints) ? breakpoints : [breakpoints]
+      if (!global.localStorage) return
+      global.localStorage.setItem(localStorageKey, breakpoints)
+    },
+    clearBreakpoints: function () {
+      if (!global.localStorage) return
+      global.localStorage.setItem(localStorageKey, null)
+    },
     generate () {
       global.reduxReport.__inProgress = true
       const used = JSON.parse(JSON.stringify(this.accessedState))
@@ -51,7 +62,7 @@ function generateReduxReport (global, rootReducer, debuggerPoints = []) {
   const makeProxy = createMakeProxyFunction({
     shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
-    debuggerPoints
+    debuggerPoints: (global.localStorage && global.localStorage.getItem(localStorageKey)) || []
   })
 
   return (prevState, action) => {

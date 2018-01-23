@@ -33,6 +33,7 @@ var createMakeProxyFunction = exports.createMakeProxyFunction = function createM
         if (debuggerPoints.find(function (p) {
           return p === newStateLocation;
         })) {
+          // don't remove this debugger statement!!
           debugger;
         }
         if ((0, _utility.isObjectOrArray)(value)) {
