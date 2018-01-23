@@ -1,6 +1,6 @@
 # Redux Usage Report
 
-This library allows you to replace a generic object with a proxied object and track which parts of the object are accessed. It can help you which parts of the store are actually being used on various parts of a large Redux application.
+This library helps you understand and refactor a large redux store by tracking which parts of the store are being accessed in different parts of an app.
 
 It exports two functions: `generateReduxReport`, and the generic helper `trackObjectUse`.
 
@@ -38,31 +38,33 @@ You can peruse the `unused` object to see which parts of state might (possibly, 
 
 ### Setting Breakpoints
 
-If you are curious when an item in the `used` object is being called by the app, you can set a breakpoint whenever that value is triggered.
+If you are curious when an item in the `used` object is being called by the app, you can set a breakpoint whenever that value is retrieved.
 For instance, if your state looked like
 
 ```
 {
   a : {
     b : {
-      c : 'foo'
+      c : ['foo', 'bar']
     }
   }
 }
 ```
-and you wanted to know when 'foo' was being accessed, you could do
+and you wanted to know when 'bar' was being accessed, you could write in the developer console:
 
 ```
-reduxReport.setBreakpoint('a.b.c')
+reduxReport.setBreakpoint('a.b.c.1')
 ```
 Reload the page, and the app will pause execution whenever that value is accessed.
-You can then check out the functions in the call stack to see when this value is actually getting accessed in your application:
+You can then check out the functions in the call stack to see what part of your app accesses the value:
 
 ![screenshot of chrome devtools](./dev_tools_screenshot.png)
 
-Finally, you can clear the breakpoint with `reduxReport.clearBreakpoint()`
+You might find that, while it is being accessed, it is just incidentally, e.g. in a deep equality check.
 
-Definitely don't use this library in production!
+You can clear the breakpoint with `reduxReport.clearBreakpoint()`
+
+Definitely don't use this `redux-usage-report` in production!
 
 ## 2. Simple Object Wrapper: `trackObjectUse`
 
