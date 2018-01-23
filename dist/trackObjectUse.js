@@ -13,8 +13,7 @@ var createMakeProxyFunction = exports.createMakeProxyFunction = function createM
       keepOriginalValues = _ref$keepOriginalValu === undefined ? false : _ref$keepOriginalValu,
       shouldSkipProxy = _ref.shouldSkipProxy,
       accessedProperties = _ref.accessedProperties,
-      _ref$debuggerPoints = _ref.debuggerPoints,
-      debuggerPoints = _ref$debuggerPoints === undefined ? [] : _ref$debuggerPoints;
+      breakpoint = _ref.breakpoint;
 
   return function makeProxy(obj) {
     var stateLocation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -30,9 +29,7 @@ var createMakeProxyFunction = exports.createMakeProxyFunction = function createM
 
         var newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey;
         // to allow people to examine the stack at certain access points
-        if (debuggerPoints.find(function (p) {
-          return p === newStateLocation;
-        })) {
+        if (breakpoint === newStateLocation) {
           // don't remove this debugger statement!!
           debugger;
         }

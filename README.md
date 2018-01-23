@@ -2,8 +2,6 @@
 
 This library allows you to replace a generic object with a proxied object and track which parts of the object are accessed. It can help you which parts of the store are actually being used on various parts of a large Redux application.
 
-It could also have other uses, such as quickly creating a minimal stub data object for tests by tracking which parts of the object the test actually requires.
-
 It exports two functions: `generateReduxReport`, and the generic helper `trackObjectUse`.
 
 **To install:** `yarn install redux-usage-report`
@@ -42,7 +40,7 @@ You can peruse the `unused` object to see which parts of state might (possibly, 
 ### Debugging Example
 
 When you use the `reduxReport.generate` function, you might want to see why certain parts of the store are marked `used`. It's possible that they are accessed simply as a side effect, for instance when doing a deep comparison of state in a `PureComponent`, which means weren't actually necessary to render the current state of the app.
-In order to investigate further, you can provide a third argument to `generateReduxReport`: an array of redux paths that, when accessed, should trigger a debugger statement so that you can explore the call stack. The paths should be in the form:
+In order to investigate further, in the console you can call you can provide a third argument to `generateReduxReport`: an array of redux paths that, when accessed, should trigger a debugger statement so that you can explore the call stack. The paths should be in the form:
 
 ```
 "a.b.c.2.d"

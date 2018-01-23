@@ -4,7 +4,7 @@ export const createMakeProxyFunction = ({
   keepOriginalValues = false,
   shouldSkipProxy,
   accessedProperties,
-  debuggerPoints = []
+  breakpoint
 }) => {
   return function makeProxy (obj, stateLocation = '') {
     const handler = {
@@ -20,7 +20,7 @@ export const createMakeProxyFunction = ({
 
         const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
         // to allow people to examine the stack at certain access points
-        if (debuggerPoints.find(p => p === newStateLocation)) {
+        if (breakpoint === newStateLocation) {
           // don't remove this debugger statement!!
           debugger
         }

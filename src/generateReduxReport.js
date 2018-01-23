@@ -35,12 +35,11 @@ function generateReduxReport (global, rootReducer, debuggerPoints = []) {
   global.reduxReport = global.reduxReport || {
     accessedState: {},
     state: {},
-    setBreakpoints: function (breakpoints) {
-      breakpoints = Array.isArray(breakpoints) ? breakpoints : [breakpoints]
+    setBreakpoint: function (breakpoint) {
       if (!global.localStorage) return
-      global.localStorage.setItem(localStorageKey, breakpoints)
+      global.localStorage.setItem(localStorageKey, breakpoint)
     },
-    clearBreakpoints: function () {
+    clearBreakpoint: function () {
       if (!global.localStorage) return
       global.localStorage.setItem(localStorageKey, null)
     },
@@ -62,7 +61,7 @@ function generateReduxReport (global, rootReducer, debuggerPoints = []) {
   const makeProxy = createMakeProxyFunction({
     shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
-    debuggerPoints: (global.localStorage && global.localStorage.getItem(localStorageKey)) || []
+    breakpoint: (global.localStorage && global.localStorage.getItem(localStorageKey)) || []
   })
 
   return (prevState, action) => {
