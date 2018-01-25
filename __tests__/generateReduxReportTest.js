@@ -13,9 +13,8 @@ const rootReducer = (state = {}, action) => {
   }
 }
 
-const wrappedReducer = generateReduxReport(window, rootReducer, ['a.b.c.2'])
-
-const getStore = (initialState) => createStore(wrappedReducer, JSON.parse(JSON.stringify(initialState)))
+const getStore = initialState =>
+  createStore(rootReducer, JSON.parse(JSON.stringify(initialState)), generateReduxReport(global))
 
 describe('generateReduxReport', () => {
   const mockStore = {
@@ -44,57 +43,49 @@ describe('generateReduxReport', () => {
     const val3 = store.getState().a.d
     const val4 = store.getState().g[2].j
 
+    debugger
+
     const expectedUsed = {
-      'a': {
-        'b': {
-          'c': [
-            null,
-            null,
-            3
-          ]
+      a: {
+        b: {
+          c: [null, null, 3]
         },
-        'd': {}
+        d: {}
       },
-      'f': [
-        5,
-        null,
-        null,
-        null,
-        null
-      ],
-      'g': [
+      f: [5, null, null, null, null],
+      g: [
         null,
         null,
         {
-          'j': 3
+          j: 3
         }
       ]
     }
 
     const expectedUnused = {
-      'k': null,
-      'l': null,
-      'm': null,
-      'o': null,
-      'a': {
-        'b': {
-          'c': {
+      k: null,
+      l: null,
+      m: null,
+      o: null,
+      a: {
+        b: {
+          c: {
             '0': null,
             '1': null,
             '3': null
           }
         },
-        'd': {
-          'e': null
+        d: {
+          e: null
         }
       },
-      'f': {
+      f: {
         '1': null,
         '2': null,
         '3': null,
         '4': null
       },
-      'g': {
+      g: {
         '0': null,
         '1': null
       }

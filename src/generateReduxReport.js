@@ -30,7 +30,7 @@ const shouldSkipProxy = (target, propKey) => {
   return false
 }
 
-function generateReduxReport (global, rootReducer, debuggerPoints = []) {
+function generateReduxReport (global, rootReducer) {
   globalObjectCache = globalObjectCache || global
   global.reduxReport = global.reduxReport || {
     accessedState: {},
@@ -74,4 +74,9 @@ function generateReduxReport (global, rootReducer, debuggerPoints = []) {
   }
 }
 
-export default generateReduxReport
+const storeEnhancer = (global = window) => createStore => (reducer, ...args) => {
+  const wrappedReducer = generateReduxReport(global, reducer)
+  return createStore(wrappedReducer, ...args)
+}
+
+export default storeEnhancer
