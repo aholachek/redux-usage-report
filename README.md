@@ -11,7 +11,7 @@ yarn install redux-usage-report
 
 ## 1. Redux Store Usage Tracker: `generateReduxReport`
 
-Setting up the store enhancer:
+Example store creation with `generateReduxReport` and other store enhancers:
 ```js
 import { createStore, applyMiddleware, compose } from "redux"
 import thunk from "redux-thunk"
@@ -24,7 +24,6 @@ let enhancer
 if (process.env.NODE_ENV === "development") {
   enhancer = compose(
     applyMiddleware(thunk),
-    // this is
     generateReduxReport(),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
@@ -86,10 +85,9 @@ You can clear the breakpoint with
 reduxReport.clearBreakpoint()
 ```
 
-**Disclaimers:**
+**Caveats:**
 
 * Definitely don't use `redux-usage-report` in production!
-* Right now this has mostly tested in Chrome.
 * This *should* work along with Redux Dev Tools extension but there is some trickery involved to get them both working at the same time.
 
 ## 2. Simple Object Wrapper: `trackObjectUse`
