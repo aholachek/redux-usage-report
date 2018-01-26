@@ -1,42 +1,54 @@
 # Redux Usage Report
 
 This library tracks the way your app is using the data in your Redux store.
-It exports the Redux store enhancer `generateReduxReport`.
+It exports a store enhancer called `generateReduxReport`.
 
-**To install:** `yarn install redux-usage-report`
+**To install:**
+
+```js
+yarn install redux-usage-report
+```
 
 ## 1. Redux Store Usage Tracker: `generateReduxReport`
 
-```
-import { createStore, applyMiddleware, compose } from 'redux';
-import thunk from 'redux-thunk';
-import generateReduxReport from 'redux-usage-report';
-import rootReducer from 'platform/state/reducers';
-import initialState from './initialState';
+```js
+import { createStore, applyMiddleware, compose } from "redux"
+import thunk from "redux-thunk"
+import generateReduxReport from "redux-usage-report"
+import rootReducer from "platform/state/reducers"
+import initialState from "./initialState"
 
-let enhancer;
+let enhancer
 
-if (process.env.NODE_ENV === 'development') {
+if (process.env.NODE_ENV === "development") {
   enhancer = compose(
     applyMiddleware(thunk),
-    generateReduxReport()
-  );
+    generateReduxReport(),
+    // if you're using dev tools extension, make sure to include generateReduxReport above it
+    window.devToolsExtension ? window.devToolsExtension() : f => f
+  )
 } else {
-  enhancer = applyMiddleware(thunk);
+  enhancer = applyMiddleware(thunk)
 }
 
-const store = createStore(rootReducer, initialState, enhancer);
-
+const store = createStore(rootReducer, initialState, enhancer)
 ```
+
 Once your rootReducer is wrapped, you open up your console when the app is running and type
-`reduxReport.generate()` to view an object that looks like:
 
+```js
+reduxReport.generate()
 ```
+
+to view an object that looks like:
+
+```js
 {
   used : { a : 1, b : 2 },
   unused : { c : 3 }
 }
 ```
+
 You can peruse the `unused` object to see which parts of state might (possibly, not necessarily) be redundant for that part of the app.
 
 ### Setting Breakpoints
@@ -44,20 +56,22 @@ You can peruse the `unused` object to see which parts of state might (possibly, 
 If you are curious when an item in the `used` object is being called by the app, you can set a breakpoint whenever that value is retrieved.
 For instance, if your state looked like
 
-```
+```js
 {
-  a : {
-    b : {
-      c : ['foo', 'bar']
+  a: {
+    b: {
+      c: ["foo", "bar"]
     }
   }
 }
 ```
+
 and you wanted to know when 'bar' was being accessed, you could write in the developer console:
 
+```js
+reduxReport.setBreakpoint("a.b.c.1")
 ```
-reduxReport.setBreakpoint('a.b.c.1')
-```
+
 Reload, and the app will pause execution whenever that value is accessed.
 You can then check out the functions in the call stack to see what part of your app accesses the value:
 
@@ -65,17 +79,23 @@ You can then check out the functions in the call stack to see what part of your 
 
 You might find that, while it is being accessed, it is just incidentally, e.g. in a deep equality check.
 
-You can clear the breakpoint with `reduxReport.clearBreakpoint()`
+You can clear the breakpoint with
+
+```js
+reduxReport.clearBreakpoint()
+```
 
 **Disclaimers:**
-- Definitely don't use `redux-usage-report` in production!
-- Right now this is only tested in Chrome.
+
+* Definitely don't use `redux-usage-report` in production!
+* Right now this is only tested in Chrome.
 
 ## 2. Simple Object Wrapper: `trackObjectUse`
 
 ### Basic Example:
-```
-import { trackObjectUse } from 'redux-usage-report'
+
+```js
+import { trackObjectUse } from "redux-usage-report"
 
 const obj = {
   a: [1, 2, 3, 4],
@@ -96,20 +116,21 @@ console.log(accessedProperties)
 
 By default it keeps the `accessedProperties` object as close as possible to the original state of the `trackedObject`. If you'd like `accessedProperties` to update as `trackedObject` is updated you can pass in an option:
 
-```
-const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginalValues : false})
+```js
+const { trackedObject, accessedProperties } = trackObjectUse(obj, { keepOriginalValues: false })
 ```
 
 ### Simple Stub Data Example:
 
 Record the minimum object required by the test:
-```
-import fs from 'fs'
-import { trackObjectUse } from 'redux-usage-report'
-import hugeStubData from './stubData.json'
 
-describe('a complex item selector', () => {
-  it('returns some item', () => {
+```js
+import fs from "fs"
+import { trackObjectUse } from "redux-usage-report"
+import hugeStubData from "./stubData.json"
+
+describe("a complex item selector", () => {
+  it("returns some item", () => {
     const { trackedObject, accessedProperties } = trackObjectUse(hugeStubData)
     const result = complexItemSelector(trackedObject, { itemId })
 
@@ -121,4 +142,3 @@ describe('a complex item selector', () => {
 ```
 
 Then remove the object tracking code from the test and use the new, smaller stub data file (`minimalStubData.json`) instead of the original stub data (`stubData.json`).
-
