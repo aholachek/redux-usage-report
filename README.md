@@ -11,6 +11,7 @@ yarn install redux-usage-report
 
 ## 1. Redux Store Usage Tracker: `generateReduxReport`
 
+Setting up the store enhancer:
 ```js
 import { createStore, applyMiddleware, compose } from "redux"
 import thunk from "redux-thunk"
@@ -34,7 +35,7 @@ if (process.env.NODE_ENV === "development") {
 const store = createStore(rootReducer, initialState, enhancer)
 ```
 
-Once your rootReducer is wrapped, you open up your console when the app is running and type
+Once you've set up the reporter, you open up your console when your app is running and type
 
 ```js
 reduxReport.generate()
