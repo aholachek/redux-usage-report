@@ -24,7 +24,7 @@ const shouldSkipProxy = (target, propKey) => {
   let reduxDevToolsExtensionInProgress
 
   try {
-    reduxDevToolsExtensionInProgress = StackTrace.get()
+    reduxDevToolsExtensionInProgress = StackTrace.getSync()
       .map(sf => sf.functionName)
       .join(' ')
       .trim()

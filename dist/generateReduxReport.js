@@ -37,7 +37,7 @@ var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
   var reduxDevToolsExtensionInProgress = void 0;
 
   try {
-    reduxDevToolsExtensionInProgress = _stacktraceJs2.default.get().map(function (sf) {
+    reduxDevToolsExtensionInProgress = _stacktraceJs2.default.getSync().map(function (sf) {
       return sf.functionName;
     }).join(' ').trim().match('tryCatchStringify stringify toContentScript relay');
   } catch (e) {}
