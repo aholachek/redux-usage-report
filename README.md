@@ -24,6 +24,7 @@ let enhancer
 if (process.env.NODE_ENV === "development") {
   enhancer = compose(
     applyMiddleware(thunk),
+    // this is
     generateReduxReport(),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )

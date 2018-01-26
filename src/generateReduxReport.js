@@ -1,5 +1,5 @@
 import { diff } from 'deep-object-diff'
-import { get as getStackTrace } from 'stacktrace-js'
+import StackTrace from 'stacktrace-js'
 import { isObjectOrArray } from './utility'
 import { createMakeProxyFunction } from './trackObjectUse'
 
@@ -24,7 +24,7 @@ const shouldSkipProxy = (target, propKey) => {
   let reduxDevToolsExtensionInProgress
 
   try {
-    reduxDevToolsExtensionInProgress = getStackTrace()
+    reduxDevToolsExtensionInProgress = StackTrace.get()
       .map(sf => sf.functionName)
       .join(' ')
       .trim()

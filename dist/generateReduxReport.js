@@ -8,9 +8,13 @@ var _deepObjectDiff = require('deep-object-diff');
 
 var _stacktraceJs = require('stacktrace-js');
 
+var _stacktraceJs2 = _interopRequireDefault(_stacktraceJs);
+
 var _utility = require('./utility');
 
 var _trackObjectUse = require('./trackObjectUse');
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var localStorageKey = 'reduxUsageReportBreakpoints';
 
@@ -33,7 +37,7 @@ var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
   var reduxDevToolsExtensionInProgress = void 0;
 
   try {
-    reduxDevToolsExtensionInProgress = (0, _stacktraceJs.get)().map(function (sf) {
+    reduxDevToolsExtensionInProgress = _stacktraceJs2.default.get().map(function (sf) {
       return sf.functionName;
     }).join(' ').trim().match('tryCatchStringify stringify toContentScript relay');
   } catch (e) {}
