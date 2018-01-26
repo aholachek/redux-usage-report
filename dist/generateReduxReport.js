@@ -6,6 +6,8 @@ Object.defineProperty(exports, "__esModule", {
 
 var _deepObjectDiff = require('deep-object-diff');
 
+var _stacktraceJs = require('stacktrace-js');
+
 var _utility = require('./utility');
 
 var _trackObjectUse = require('./trackObjectUse');
@@ -28,7 +30,15 @@ function replaceUndefinedWithNull(obj) {
 var globalObjectCache = void 0;
 
 var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
-  if (!target.hasOwnProperty(propKey) || global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) {
+  var reduxDevToolsExtensionInProgress = void 0;
+
+  try {
+    reduxDevToolsExtensionInProgress = (0, _stacktraceJs.get)().map(function (sf) {
+      return sf.functionName;
+    }).join(' ').trim().match('tryCatchStringify stringify toContentScript relay');
+  } catch (e) {}
+
+  if (reduxDevToolsExtensionInProgress || !target.hasOwnProperty(propKey) || global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) {
     return true;
   }
   return false;

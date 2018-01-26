@@ -25,7 +25,6 @@ if (process.env.NODE_ENV === "development") {
   enhancer = compose(
     applyMiddleware(thunk),
     generateReduxReport(),
-    // if you're using dev tools extension, make sure to include generateReduxReport above it
     window.devToolsExtension ? window.devToolsExtension() : f => f
   )
 } else {
@@ -89,7 +88,8 @@ reduxReport.clearBreakpoint()
 **Disclaimers:**
 
 * Definitely don't use `redux-usage-report` in production!
-* Right now this is only tested in Chrome.
+* Right now this has mostly tested in Chrome.
+* This *should* work along with Redux Dev Tools extension but there is some trickery involved to get them both working at the same time.
 
 ## 2. Simple Object Wrapper: `trackObjectUse`
 

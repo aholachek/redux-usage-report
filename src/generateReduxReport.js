@@ -1,4 +1,5 @@
 import { diff } from 'deep-object-diff'
+import { get as getStackTrace } from 'stacktrace-js'
 import { isObjectOrArray } from './utility'
 import { createMakeProxyFunction } from './trackObjectUse'
 
@@ -20,7 +21,18 @@ function replaceUndefinedWithNull (obj) {
 let globalObjectCache
 
 const shouldSkipProxy = (target, propKey) => {
+  let reduxDevToolsExtensionInProgress
+
+  try {
+    reduxDevToolsExtensionInProgress = getStackTrace()
+      .map(sf => sf.functionName)
+      .join(' ')
+      .trim()
+      .match('tryCatchStringify stringify toContentScript relay')
+  } catch (e) {}
+
   if (
+    reduxDevToolsExtensionInProgress ||
     !target.hasOwnProperty(propKey) ||
     global.reduxReport.__inProgress ||
     global.reduxReport.__reducerInProgress
