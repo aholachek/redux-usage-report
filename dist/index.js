@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 
 var _generateReduxReport = require('./generateReduxReport');
 
-Object.defineProperty(exports, 'generateReduxReport', {
+Object.defineProperty(exports, 'default', {
   enumerable: true,
   get: function get() {
     return _interopRequireDefault(_generateReduxReport).default;

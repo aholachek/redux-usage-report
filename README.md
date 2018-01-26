@@ -1,28 +1,31 @@
 # Redux Usage Report
 
-This library helps you understand and refactor a large redux store by tracking which parts of the store are being accessed in different parts of an app.
-
-It exports two functions: `generateReduxReport`, and the generic helper `trackObjectUse`.
+This library tracks the way your app is using the data in your Redux store.
+It exports the Redux store enhancer `generateReduxReport`.
 
 **To install:** `yarn install redux-usage-report`
 
 ## 1. Redux Store Usage Tracker: `generateReduxReport`
 
 ```
-import { generateReduxReport } from 'redux-usage-report';
-import { combineReducers } from 'redux';
-... rest of imports
+import { createStore, applyMiddleware, compose } from 'redux';
+import thunk from 'redux-thunk';
+import generateReduxReport from 'redux-usage-report';
+import rootReducer from 'platform/state/reducers';
+import initialState from './initialState';
 
-const rootReducer = combineReducers({
-  // ... reducers go here
-});
+let enhancer;
 
 if (process.env.NODE_ENV === 'development') {
-  // provide reference to the global object as the first argument
-  export default generateReduxReport(window, rootReducer);
+  enhancer = compose(
+    applyMiddleware(thunk),
+    generateReduxReport()
+  );
 } else {
-  export default rootReducer
+  enhancer = applyMiddleware(thunk);
 }
+
+const store = createStore(rootReducer, initialState, enhancer);
 
 ```
 Once your rootReducer is wrapped, you open up your console when the app is running and type
@@ -55,7 +58,7 @@ and you wanted to know when 'bar' was being accessed, you could write in the dev
 ```
 reduxReport.setBreakpoint('a.b.c.1')
 ```
-Reload the page, and the app will pause execution whenever that value is accessed.
+Reload, and the app will pause execution whenever that value is accessed.
 You can then check out the functions in the call stack to see what part of your app accesses the value:
 
 ![screenshot of chrome devtools](./dev_tools_screenshot.png)
@@ -64,7 +67,9 @@ You might find that, while it is being accessed, it is just incidentally, e.g. i
 
 You can clear the breakpoint with `reduxReport.clearBreakpoint()`
 
-Definitely don't use this `redux-usage-report` in production!
+**Disclaimers:**
+- Definitely don't use `redux-usage-report` in production!
+- Right now this is only tested in Chrome.
 
 ## 2. Simple Object Wrapper: `trackObjectUse`
 

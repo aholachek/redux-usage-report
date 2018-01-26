@@ -1,5 +1,5 @@
 import { createStore } from 'redux'
-import { generateReduxReport } from '../src/index'
+import generateReduxReport from '../src/index'
 import saveReport from '../src/saveReport'
 
 // a tiny Redux store for testing

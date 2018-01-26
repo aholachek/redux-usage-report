@@ -51,5 +51,4 @@ describe('trackObjectUse', () => {
 
     expect(accessedProperties).toEqual({ b: { c: { d: [1, undefined, undefined, 4] } } })
   })
-
 })

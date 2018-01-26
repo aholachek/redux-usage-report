@@ -74,9 +74,10 @@ function generateReduxReport (global, rootReducer) {
   }
 }
 
-const storeEnhancer = (global = window) => createStore => (reducer, ...args) => {
+// "next" is either createStore or a wrapped version from another enhancer
+const storeEnhancer = (global = window) => next => (reducer, ...args) => {
   const wrappedReducer = generateReduxReport(global, reducer)
-  return createStore(wrappedReducer, ...args)
+  return next(wrappedReducer, ...args)
 }
 
 export default storeEnhancer

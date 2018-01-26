@@ -35,8 +35,6 @@ var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
 };
 
 function generateReduxReport(global, rootReducer) {
-  var debuggerPoints = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : [];
-
   globalObjectCache = globalObjectCache || global;
   global.reduxReport = global.reduxReport || {
     accessedState: {},
@@ -80,4 +78,19 @@ function generateReduxReport(global, rootReducer) {
   };
 }
 
-exports.default = generateReduxReport;
+// "next" is either createStore or a wrapped version from another enhancer
+var storeEnhancer = function storeEnhancer() {
+  var global = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : window;
+  return function (next) {
+    return function (reducer) {
+      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+        args[_key - 1] = arguments[_key];
+      }
+
+      var wrappedReducer = generateReduxReport(global, reducer);
+      return next.apply(undefined, [wrappedReducer].concat(args));
+    };
+  };
+};
+
+exports.default = storeEnhancer;
