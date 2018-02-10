@@ -34,15 +34,7 @@ function replaceUndefinedWithNull(obj) {
 var globalObjectCache = void 0;
 
 var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
-  var reduxDevToolsExtensionInProgress = void 0;
-
-  try {
-    reduxDevToolsExtensionInProgress = _stacktraceJs2.default.getSync().map(function (sf) {
-      return sf.functionName;
-    }).join(' ').trim().match('tryCatchStringify stringify toContentScript relay');
-  } catch (e) {}
-
-  if (reduxDevToolsExtensionInProgress || !target.hasOwnProperty(propKey) || global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) {
+  if (!target.hasOwnProperty(propKey) || global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) {
     return true;
   }
   return false;
@@ -85,10 +77,20 @@ function generateReduxReport(global, rootReducer) {
   return function (prevState, action) {
     global.reduxReport.__reducerInProgress = true;
     var state = rootReducer(prevState, action);
-    global.reduxReport.__reducerInProgress = false;
-    var proxiedState = makeProxy(state);
-    global.reduxReport.state = proxiedState;
-    return proxiedState;
+
+    var usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === 'number';
+
+    if (usingReduxDevTools) {
+      state.computedStates[state.currentStateIndex].state = makeProxy(state.computedStates[state.currentStateIndex].state);
+      global.reduxReport.__reducerInProgress = false;
+      global.reduxReport.state = state.computedStates[state.currentStateIndex].state;
+      return state;
+    } else {
+      var proxiedState = makeProxy(state);
+      global.reduxReport.__reducerInProgress = false;
+      global.reduxReport.state = proxiedState;
+      return proxiedState;
+    }
   };
 }
 

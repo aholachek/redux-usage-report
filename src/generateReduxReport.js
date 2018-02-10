@@ -21,18 +21,7 @@ function replaceUndefinedWithNull (obj) {
 let globalObjectCache
 
 const shouldSkipProxy = (target, propKey) => {
-  let reduxDevToolsExtensionInProgress
-
-  try {
-    reduxDevToolsExtensionInProgress = StackTrace.getSync()
-      .map(sf => sf.functionName)
-      .join(' ')
-      .trim()
-      .match('tryCatchStringify stringify toContentScript relay')
-  } catch (e) {}
-
   if (
-    reduxDevToolsExtensionInProgress ||
     !target.hasOwnProperty(propKey) ||
     global.reduxReport.__inProgress ||
     global.reduxReport.__reducerInProgress
@@ -79,10 +68,22 @@ function generateReduxReport (global, rootReducer) {
   return (prevState, action) => {
     global.reduxReport.__reducerInProgress = true
     const state = rootReducer(prevState, action)
-    global.reduxReport.__reducerInProgress = false
-    const proxiedState = makeProxy(state)
-    global.reduxReport.state = proxiedState
-    return proxiedState
+
+    const usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === 'number'
+
+    if (usingReduxDevTools) {
+      state.computedStates[state.currentStateIndex].state = makeProxy(
+        state.computedStates[state.currentStateIndex].state
+      )
+      global.reduxReport.__reducerInProgress = false
+      global.reduxReport.state = state.computedStates[state.currentStateIndex].state
+      return state
+    } else {
+      const proxiedState = makeProxy(state)
+      global.reduxReport.__reducerInProgress = false
+      global.reduxReport.state = proxiedState
+      return proxiedState
+    }
   }
 }
 

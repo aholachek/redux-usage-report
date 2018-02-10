@@ -88,7 +88,6 @@ reduxReport.clearBreakpoint()
 **Caveats:**
 
 * Definitely don't use `redux-usage-report` in production!
-* This *should* work along with Redux Dev Tools extension but there is some trickery involved to get them both working at the same time.
 
 ## 2. Simple Object Wrapper: `trackObjectUse`
 
