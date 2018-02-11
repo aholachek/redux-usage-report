@@ -28,11 +28,13 @@ const shouldSkipProxy = (target, propKey) => {
   // this is kind of hacky, but webpack dev server servers non-local functions
   // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
   // whereas local files look like this: webpack:///./containers/TodoApp.js
-  const initiatingFuncNotLocal =
-    initiatingFunc && initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//)
-
+  // also trying to avoid functions emanating from browser extensions
+  var initiatingFuncNotLocal =
+    initiatingFunc &&
+    (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) ||
+      initiatingFunc.fileName.match(/extension:\/\//))
   if (
-    initiatingFuncNotLocal ||
+    !!initiatingFuncNotLocal ||
     !target.hasOwnProperty(propKey) ||
     global.reduxReport.__inProgress ||
     global.reduxReport.__reducerInProgress
