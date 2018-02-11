@@ -19,9 +19,9 @@ export const createMakeProxyFunction = ({
           }, accessedProperties)
 
         const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
-        // to allow people to examine the stack at certain access points
+        // allow people to examine the stack at certain access points
         if (breakpoint === newStateLocation) {
-          // don't remove this debugger statement!!
+          // explore the callstack to see when your app accesses a value
           debugger
         }
         if (isObjectOrArray(value)) {

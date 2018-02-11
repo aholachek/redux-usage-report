@@ -21,7 +21,18 @@ function replaceUndefinedWithNull (obj) {
 let globalObjectCache
 
 const shouldSkipProxy = (target, propKey) => {
+  
+  const initiatingFunc = StackTrace.getSync().filter(
+    s => !s.fileName.match('redux-usage-report')
+  )[0]
+
+  // this is kind of hacky, but webpack dev server servers non-local functions
+  // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
+  // whereas local files look like this: webpack:///./containers/TodoApp.js
+  const initiatingFuncNotLocal = initiatingFunc.fileName.match(/\.\/~\/||\/node_modules\//)
+
   if (
+    initiatingFuncNotLocal ||
     !target.hasOwnProperty(propKey) ||
     global.reduxReport.__inProgress ||
     global.reduxReport.__reducerInProgress
