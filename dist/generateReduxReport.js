@@ -70,7 +70,8 @@ function generateReduxReport(global, rootReducer) {
       replaceUndefinedWithNull(unused);
       var report = {
         used: used,
-        unused: unused
+        unused: unused,
+        stateCopy: stateCopy
       };
       global.reduxReport.__inProgress = false;
       return report;

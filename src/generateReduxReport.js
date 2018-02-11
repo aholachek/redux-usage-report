@@ -63,7 +63,8 @@ function generateReduxReport (global, rootReducer) {
       replaceUndefinedWithNull(unused)
       const report = {
         used,
-        unused
+        unused,
+        stateCopy
       }
       global.reduxReport.__inProgress = false
       return report
