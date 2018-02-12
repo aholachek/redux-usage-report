@@ -25,7 +25,7 @@ const shouldSkipProxy = (target, propKey) => {
     s => s.fileName && !s.fileName.match('redux-usage-report')
   )[0]
 
-  // this is kind of hacky, but webpack dev server servers non-local functions
+  // this is kind of hacky, but webpack dev server serves non-local files
   // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
   // whereas local files look like this: webpack:///./containers/TodoApp.js
   // also trying to avoid functions emanating from browser extensions
