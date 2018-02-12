@@ -35,9 +35,21 @@ class ReduxUsageMonitor extends Component {
     const Container = styled.div`
       background-color: ${theme.base00};
       min-height: 100%;
-      font-size: 17px;
+      font-size: 16.5px;
       font-weight: normal;
       color: ${theme.base07};
+
+      a {
+        color: ${theme.base0D};
+      }
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: ${theme.base07};
+      }
     `;
 
     const TabContainer = styled.ul`
@@ -55,11 +67,14 @@ class ReduxUsageMonitor extends Component {
       text-align: center;
       background-color: fade-out(${theme.base07}, 0.9);
       padding: 1rem;
-      font-weight: ${props => (props.active ? 'bold' : 'normal')};
-      border-bottom: 2px solid transparent;
-      border-color: ${props => (props.active ? theme.base0C : theme.base02)};
+      color: ${props => (props.active ? theme.base0D : theme.base05)};
+      border-bottom: 3px solid transparent;
+      border-color: ${props => (props.active ? theme.base0D: theme.base02)};
+      background-color: ${props =>
+        props.active ? 'hsla(0, 0%, 100%, 0.08)' : null};
       &:hover {
-        background-color: hsla(0, 0%, 100%, 0.08);
+        background-color: ${props =>
+          props.active ? 'hsla(0, 0%, 100%, 0.08)' : 'hsla(0, 0%, 100%, 0.03)'};
       }
     `;
 
