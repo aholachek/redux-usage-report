@@ -5,25 +5,36 @@
   "main": "dist/index.js",
   "scripts": {
     "test": "jest",
-    "build": "babel src -d dist"
+    "build": "NODE_ENV=production babel src -d dist"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "babel-eslint": "^7.2.3",
     "deep-object-diff": "^1.0.4",
+    "eslint-plugin-flowtype": "^2.34.1",
+    "eslint-plugin-jsx-a11y": "^5.1.1",
+    "eslint-plugin-react": "^7.1.0",
     "fs": "^0.0.1-security",
-    "stacktrace-js": "^2.0.0"
+    "install": "^0.10.4",
+    "npm": "^5.6.0",
+    "prop-types": "^15.6.0",
+    "react": "^16.2.0",
+    "react-json-tree": "^0.11.0",
+    "stacktrace-js": "^2.0.0",
+    "styled-components": "^3.1.6"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
     "babel-jest": "^22.0.3",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.6.1",
-    "eslint": "^4.13.1",
-    "eslint-config-standard": "^11.0.0-beta.0",
-    "eslint-plugin-import": "^2.8.0",
+    "babel-preset-react-app": "^3.1.1",
+    "eslint": "^4.1.1",
+    "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-node": "^5.2.1",
     "eslint-plugin-promise": "^3.6.0",
-    "eslint-plugin-standard": "^3.0.1",
     "jest": "^22.0.1",
     "redux": "^3.7.2"
   },

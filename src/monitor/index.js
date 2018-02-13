@@ -1,35 +1,37 @@
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import styled from 'styled-components';
-import theme from './theme';
-import Info from './Info';
-import ReduxTree from './ReduxTree';
+import React, { Component } from "react"
+import PropTypes from "prop-types"
+import styled from "styled-components"
+import theme from "./theme"
+import Info from "./Info"
+import ReduxTree from "./ReduxTree"
 
-const localStorageKey = 'reduxUsageReportBreakpoints';
+debugger
+
+const localStorageKey = "reduxUsageReportBreakpoints"
 
 class ReduxUsageMonitor extends Component {
   static propTypes = {
-    computedStates: PropTypes.array.isRequired,
-  };
+    computedStates: PropTypes.array.isRequired
+  }
 
-  static update = function() {};
+  static update = function() {}
 
   state = {
     showInfo: false,
-    currentBreakpoint: localStorage[localStorageKey],
-  };
+    currentBreakpoint: localStorage[localStorageKey]
+  }
 
   setBreakpoint = breakpointPath => {
-    window.reduxReport.setBreakpoint(breakpointPath);
-    this.setState({ currentBreakpoint: breakpointPath });
-  };
+    window.reduxReport.setBreakpoint(breakpointPath)
+    this.setState({ currentBreakpoint: breakpointPath })
+  }
 
   showInfo = () => {
-    this.setState({ showInfo: true });
-  };
+    this.setState({ showInfo: true })
+  }
   hideInfo = () => {
-    this.setState({ showInfo: false });
-  };
+    this.setState({ showInfo: false })
+  }
 
   render() {
     const Container = styled.div`
@@ -50,7 +52,7 @@ class ReduxUsageMonitor extends Component {
       h6 {
         color: ${theme.base07};
       }
-    `;
+    `
 
     const TabContainer = styled.ul`
       display: flex;
@@ -58,7 +60,7 @@ class ReduxUsageMonitor extends Component {
       li {
         flex: 1;
       }
-    `;
+    `
 
     const Tab = styled.a`
       color: ${theme.base07};
@@ -69,18 +71,17 @@ class ReduxUsageMonitor extends Component {
       padding: 1rem;
       color: ${props => (props.active ? theme.base0D : theme.base05)};
       border-bottom: 3px solid transparent;
-      border-color: ${props => (props.active ? theme.base0D: theme.base02)};
-      background-color: ${props =>
-        props.active ? 'hsla(0, 0%, 100%, 0.08)' : null};
+      border-color: ${props => (props.active ? theme.base0D : theme.base02)};
+      background-color: ${props => (props.active ? "hsla(0, 0%, 100%, 0.08)" : null)};
       &:hover {
         background-color: ${props =>
-          props.active ? 'hsla(0, 0%, 100%, 0.08)' : 'hsla(0, 0%, 100%, 0.03)'};
+          props.active ? "hsla(0, 0%, 100%, 0.08)" : "hsla(0, 0%, 100%, 0.03)"};
       }
-    `;
+    `
 
     const ContentContainer = styled.div`
       padding: 1.5rem;
-    `;
+    `
 
     return (
       <Container>
@@ -110,8 +111,8 @@ class ReduxUsageMonitor extends Component {
           )}
         </ContentContainer>
       </Container>
-    );
+    )
   }
 }
 
-export default ReduxUsageMonitor;
+export default ReduxUsageMonitor
