@@ -1,22 +1,15 @@
-'use strict';
+import { diff } from "deep-object-diff";
+import StackTrace from "stacktrace-js";
+import { isObjectOrArray } from "./utility";
+import { createMakeProxyFunction } from "./trackObjectUse";
 
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
+// we need source maps for the stack traces
+// or else we won't know whether to ignore object access
+// from non-local code (e.g node_modules, browser extensions...)
+import "source-map-support/browser-source-map-support";
+sourceMapSupport.install();
 
-var _deepObjectDiff = require('deep-object-diff');
-
-var _stacktraceJs = require('stacktrace-js');
-
-var _stacktraceJs2 = _interopRequireDefault(_stacktraceJs);
-
-var _utility = require('./utility');
-
-var _trackObjectUse = require('./trackObjectUse');
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var localStorageKey = 'reduxUsageReportBreakpoints';
+var localStorageKey = "reduxUsageReportBreakpoints";
 
 // so that JSON.stringify doesn't remove all undefined fields
 function replaceUndefinedWithNull(obj) {
@@ -25,7 +18,7 @@ function replaceUndefinedWithNull(obj) {
     if (val === undefined) {
       obj[k] = null;
     }
-    if ((0, _utility.isObjectOrArray)(val)) {
+    if (isObjectOrArray(val)) {
       replaceUndefinedWithNull(val);
     }
   });
@@ -34,15 +27,22 @@ function replaceUndefinedWithNull(obj) {
 var globalObjectCache = void 0;
 
 var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
-  var initiatingFunc = _stacktraceJs2.default.getSync().filter(function (s) {
-    return s.fileName && !s.fileName.match('redux-usage-report');
-  })[0];
-
-  // this is kind of hacky, but webpack dev server servers non-local functions
+  // this is kind of hacky, but webpack dev server serves non-local files
   // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
   // whereas local files look like this: webpack:///./containers/TodoApp.js
   // also trying to avoid functions emanating from browser extensions
-  var initiatingFuncNotLocal = initiatingFunc && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
+
+  var stackFrames = StackTrace.getSync();
+  var initiatingFunc = stackFrames[stackFrames.findIndex(function (s) {
+    return s.functionName === "Object.get";
+  }) + 1];
+
+  var initiatingFuncNotLocal = !!initiatingFunc && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
+
+  if (initiatingFuncNotLocal) {
+    console.log('not local', initiatingFunc);
+  }
+
   if (!!initiatingFuncNotLocal || !target.hasOwnProperty(propKey) || global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) {
     return true;
   }
@@ -66,7 +66,7 @@ function generateReduxReport(global, rootReducer) {
       global.reduxReport.__inProgress = true;
       var used = JSON.parse(JSON.stringify(this.accessedState));
       var stateCopy = JSON.parse(JSON.stringify(this.state));
-      var unused = (0, _deepObjectDiff.diff)(stateCopy, used);
+      var unused = diff(stateCopy, used);
       replaceUndefinedWithNull(unused);
       var report = {
         used: used,
@@ -78,7 +78,7 @@ function generateReduxReport(global, rootReducer) {
     }
   };
 
-  var makeProxy = (0, _trackObjectUse.createMakeProxyFunction)({
+  var makeProxy = createMakeProxyFunction({
     shouldSkipProxy: shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
     breakpoint: global.localStorage && global.localStorage.getItem(localStorageKey) || []
@@ -88,7 +88,7 @@ function generateReduxReport(global, rootReducer) {
     global.reduxReport.__reducerInProgress = true;
     var state = rootReducer(prevState, action);
 
-    var usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === 'number';
+    var usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === "number";
 
     if (usingReduxDevTools) {
       state.computedStates[state.currentStateIndex].state = makeProxy(state.computedStates[state.currentStateIndex].state);
@@ -119,4 +119,4 @@ var storeEnhancer = function storeEnhancer() {
   };
 };
 
-exports.default = storeEnhancer;
+export default storeEnhancer;

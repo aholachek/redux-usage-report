@@ -3,6 +3,19 @@ import PropTypes from "prop-types"
 import JSONTree from "react-json-tree"
 import styled from "styled-components"
 
+const FadeSpan = styled.span`
+  opacity: ${props => (props.fullOpacity ? 1 : 0.35)};
+  font-size: 16.5px;
+  line-height: 1.4;
+`
+
+const KeySpan = FadeSpan.extend`
+  position: relative;
+  color: ${props => (props.breakpointActive ? "red" : null)};
+  font-weight: ${props => (props.breakpointActive ? "bold" : "normal")};
+  cursor: pointer;
+`
+
 class ReduxTree extends Component {
   static propTypes = {
     theme: PropTypes.object.isRequired,
@@ -19,7 +32,8 @@ class ReduxTree extends Component {
     this.state = {
       used,
       unused,
-      stateCopy
+      stateCopy,
+      expandedPaths: []
     }
   }
 
@@ -49,55 +63,45 @@ class ReduxTree extends Component {
     e.stopPropagation()
   }
 
+  getItemString = (type, data, itemType, itemString) => <FadeSpan>{itemType}</FadeSpan>
+
+  valueRenderer = (val, ...args) => {
+    const isUsed = this.isUsed(args.slice(1).reverse())
+    return <FadeSpan fullOpacity={isUsed}>{val}</FadeSpan>
+  }
+
+  labelRenderer = (keyPath, type) => {
+    const isUsed = this.isUsed(keyPath.slice().reverse())
+    const breakpointPath = keyPath
+      .slice()
+      .reverse()
+      .join(".")
+
+    const breakpointActive = breakpointPath === this.props.currentBreakpoint
+
+    return (
+      <KeySpan
+        fullOpacity={isUsed}
+        breakpointActive={breakpointActive}
+        onClick={this.setBreakpointOnClick(breakpointPath)}
+      >
+        {keyPath[0]}
+      </KeySpan>
+    )
+  }
+
   render() {
-    const FadeSpan = styled.span`
-      opacity: ${props => (props.fullOpacity ? 1 : 0.35)};
-      font-size: 16.5px;
-      line-height: 1.4;
-    `
-
-    const KeySpan = FadeSpan.extend`
-      position: relative;
-      color: ${props => (props.breakpointActive ? "red" : null)};
-      font-weight: ${props => (props.breakpointActive ? "bold" : "normal")};
-    `
-
-    const getItemString = (type, data, itemType, itemString) => <FadeSpan>{itemType}</FadeSpan>
-
-    const valueRenderer = (val, ...args) => {
-      const isUsed = this.isUsed(args.slice(1).reverse())
-      return <FadeSpan fullOpacity={isUsed}>{val}</FadeSpan>
-    }
-
-    const labelRenderer = (keyPath, type) => {
-      const isUsed = this.isUsed(keyPath.slice().reverse())
-      const breakpointPath = keyPath
-        .slice()
-        .reverse()
-        .join(".")
-
-      const breakpointActive = breakpointPath === this.props.currentBreakpoint
-
-      return (
-        <KeySpan
-          fullOpacity={isUsed}
-          breakpointActive={breakpointActive}
-          onClick={this.setBreakpointOnClick(breakpointPath)}
-        >
-          {keyPath[0]}
-        </KeySpan>
-      )
-    }
-
     return (
       <JSONTree
         data={this.state.stateCopy}
         hideRoot
         theme={this.props.theme}
         invertTheme={false}
-        getItemString={getItemString}
-        valueRenderer={valueRenderer}
-        labelRenderer={labelRenderer}
+        getItemString={this.getItemString}
+        valueRenderer={this.valueRenderer}
+        labelRenderer={this.labelRenderer}
+        // force re-rendering when breakpoint changes
+        currentBreakpoint={this.props.currentBreakpoint}
       />
     )
   }

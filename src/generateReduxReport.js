@@ -1,12 +1,18 @@
-import { diff } from 'deep-object-diff'
-import StackTrace from 'stacktrace-js'
-import { isObjectOrArray } from './utility'
-import { createMakeProxyFunction } from './trackObjectUse'
+import { diff } from "deep-object-diff"
+import StackTrace from "stacktrace-js"
+import { isObjectOrArray } from "./utility"
+import { createMakeProxyFunction } from "./trackObjectUse"
 
-const localStorageKey = 'reduxUsageReportBreakpoints'
+// we need source maps for the stack traces
+// or else we won't know whether to ignore object access
+// from non-local code (e.g node_modules, browser extensions...)
+import "source-map-support/browser-source-map-support"
+sourceMapSupport.install()
+
+const localStorageKey = "reduxUsageReportBreakpoints"
 
 // so that JSON.stringify doesn't remove all undefined fields
-function replaceUndefinedWithNull (obj) {
+function replaceUndefinedWithNull(obj) {
   Object.keys(obj).forEach(k => {
     const val = obj[k]
     if (val === undefined) {
@@ -21,18 +27,24 @@ function replaceUndefinedWithNull (obj) {
 let globalObjectCache
 
 const shouldSkipProxy = (target, propKey) => {
-  const initiatingFunc = StackTrace.getSync().filter(
-    s => s.fileName && !s.fileName.match('redux-usage-report')
-  )[0]
-
   // this is kind of hacky, but webpack dev server serves non-local files
   // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
   // whereas local files look like this: webpack:///./containers/TodoApp.js
   // also trying to avoid functions emanating from browser extensions
-  var initiatingFuncNotLocal =
-    initiatingFunc &&
+
+  const stackFrames = StackTrace.getSync()
+  const initiatingFunc =
+    stackFrames[stackFrames.findIndex(s => s.functionName === "Object.get") + 1]
+
+  const initiatingFuncNotLocal =
+    !!initiatingFunc &&
     (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) ||
       initiatingFunc.fileName.match(/extension:\/\//))
+
+ if (initiatingFuncNotLocal){
+   console.log('not local',initiatingFunc)
+ }
+
   if (
     !!initiatingFuncNotLocal ||
     !target.hasOwnProperty(propKey) ||
@@ -44,20 +56,20 @@ const shouldSkipProxy = (target, propKey) => {
   return false
 }
 
-function generateReduxReport (global, rootReducer) {
+function generateReduxReport(global, rootReducer) {
   globalObjectCache = globalObjectCache || global
   global.reduxReport = global.reduxReport || {
     accessedState: {},
     state: {},
-    setBreakpoint: function (breakpoint) {
+    setBreakpoint: function(breakpoint) {
       if (!global.localStorage) return
       global.localStorage.setItem(localStorageKey, breakpoint)
     },
-    clearBreakpoint: function () {
+    clearBreakpoint: function() {
       if (!global.localStorage) return
       global.localStorage.setItem(localStorageKey, null)
     },
-    generate () {
+    generate() {
       global.reduxReport.__inProgress = true
       const used = JSON.parse(JSON.stringify(this.accessedState))
       const stateCopy = JSON.parse(JSON.stringify(this.state))
@@ -83,7 +95,7 @@ function generateReduxReport (global, rootReducer) {
     global.reduxReport.__reducerInProgress = true
     const state = rootReducer(prevState, action)
 
-    const usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === 'number'
+    const usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === "number"
 
     if (usingReduxDevTools) {
       state.computedStates[state.currentStateIndex].state = makeProxy(

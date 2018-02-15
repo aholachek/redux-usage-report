@@ -1,16 +1,26 @@
-import React from 'react'
-import { render } from 'react-dom'
-import { createStore } from 'redux'
-import { Provider } from 'react-redux'
-import App from './containers/App'
-import reducer from './reducers'
-import 'todomvc-app-css/index.css'
+import React from "react"
+import { render } from "react-dom"
+import { createStore, compose } from "redux"
+import { persistState } from "redux-devtools"
+import { Provider } from "react-redux"
+import App from "./containers/App"
+import reducer from "./reducers"
+import "todomvc-app-css/index.css"
 
-const store = createStore(reducer)
+import generateReduxReport from "./../../dist"
+import DevTools from "./containers/DevTools"
+
+const enhancer = compose(
+  DevTools.instrument(),
+  generateReduxReport(),
+  persistState(window.location.href.match(/[?&]debug_session=([^&#]+)\b/))
+)
+
+const store = createStore(reducer, enhancer)
 
 render(
   <Provider store={store}>
     <App />
   </Provider>,
-  document.getElementById('root')
+  document.getElementById("root")
 )

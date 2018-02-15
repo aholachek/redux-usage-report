@@ -4,40 +4,65 @@ import styled from "styled-components"
 
 const propTypes = {
   currentBreakpoint: PropTypes.string,
-  setBreakpoint: PropTypes.func.isRequired
+  setBreakpoint: PropTypes.func.isRequired,
+  theme: PropTypes.object.isRequired
 }
 
-const Info = ({ currentBreakpoint, setBreakpoint }) => {
-  const Button = styled.button``
-  const removeBreakpoint = () => setBreakpoint(null)
+const Button = styled.button`
+  margin: 0;
+  margin-bottom: 1rem;
+  padding: 0;
+  border: 0;
+  border-radius: 3px;
+  background: none;
+  font-size: 100%;
+  vertical-align: baseline;
+  font-family: inherit;
+  font-weight: inherit;
+  color: ${props => props.theme.base00};
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  -webkit-font-smoothing: antialiased;
+  background-color: ${props => props.theme.base0D};
+  padding: 8px 12px;
+  font-weight: bold;
+  cursor: pointer;
+  &:hover,
+  &:focus {
+    background-color: ${props => props.theme.base0D};
+  }
+`
+
+const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
+  const removeBreakpoint = () => setBreakpoint("")
   return (
     <div>
       <h3>What it shows</h3>
       <div>
         <p>
-          This monitor shows you a view of your Redux store based on what parts of it your app has
+          This monitor shows you a view of your Redux store based on what parts of it your code has
           actually touched.
         </p>
-        <p>Values that have not been accessed at least once are faded out.</p>
+        <p>Values that have not been accessed are faded out.</p>
         <p>
-          The value access might have been meaningful, e.g. your app pulling a property to display
-          to the user, or it might have been incidental, for instance it could have been accessed
-          when making a shallow copy of its parent.
-        </p>
-        <p>The easiest way to find out is by setting a breakpoint.</p>
-        <p>
-          (To learn more, check out <a href=""> the README.</a>)
+          To learn more, check out <a href=""> the README.</a>
         </p>
       </div>
-      <h3>Setting a Breakpoint</h3>
+      <h3>Setting a breakpoint</h3>
       <div>
         {!!currentBreakpoint && (
           <div>
-            There is currently a breakpoint set at {currentBreakpoint}
-            <Button onClick={removeBreakpoint}>Remove this breakpoint</Button>
+            There is currently a breakpoint set at{" "}
+            <pre>
+              <code>{currentBreakpoint}</code>
+            </pre>
+            <Button onClick={removeBreakpoint} theme={theme}>
+              Remove breakpoint
+            </Button>
           </div>
         )}
-        <p>Shift + click a key to set a breakpoint.</p>
+        <p>Shift + click a key in the "Redux Usage" view to set a breakpoint.</p>
         <p>
           You can reload the page with your devtools open and execution will stop whenever that
           value in your store is accessed by your app.
