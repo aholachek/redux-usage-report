@@ -1,2 +1,7 @@
 src
+todomvc-example
+node_modules
 .babelrc
+__tests__
+.eslintrc
+dev_tools_screenshot.png
