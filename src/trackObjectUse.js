@@ -1,24 +1,24 @@
-import { isObjectOrArray, isUndefined } from './utility'
+import { isObjectOrArray, isUndefined } from "./utility"
 
 export const createMakeProxyFunction = ({
   keepOriginalValues = false,
   shouldSkipProxy,
   accessedProperties,
-  getBreakpoint
+  getBreakpoint = () => {}
 }) => {
-  return function makeProxy (obj, stateLocation = '') {
+  return function makeProxy(obj, stateLocation = "") {
     const handler = {
-      get (target, propKey) {
+      get(target, propKey) {
         const value = target[propKey]
         if (!isUndefined(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value
 
         const accessedPropertiesPointer = !stateLocation
           ? accessedProperties
-          : stateLocation.split('.').reduce((acc, key) => {
-            return acc[key]
-          }, accessedProperties)
+          : stateLocation.split(".").reduce((acc, key) => {
+              return acc[key]
+            }, accessedProperties)
 
-        const newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey
+        const newStateLocation = stateLocation ? stateLocation + "." + propKey : propKey
         // allow people to examine the stack at certain access points
         if (getBreakpoint() === newStateLocation) {
           // explore the callstack to see when your app accesses a value
@@ -41,7 +41,7 @@ export const createMakeProxyFunction = ({
   }
 }
 
-export default function trackObjectUse (obj, { keepOriginalValues = true } = {}) {
+export default function trackObjectUse(obj, { keepOriginalValues = true } = {}) {
   const accessedProperties = {}
   const makeProxy = createMakeProxyFunction({ accessedProperties, keepOriginalValues })
   const trackedObject = makeProxy(obj)
