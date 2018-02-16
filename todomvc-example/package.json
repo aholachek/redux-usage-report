@@ -58,7 +58,9 @@
   "scripts": {
     "start": "node scripts/start.js",
     "build": "node scripts/build.js",
-    "test": "node scripts/test.js"
+    "deploy": "surge build --domain elite-orange.surge.sh/",
+    "test": "node scripts/test.js",
+    "update-redux-report" : "cd ../; npm run build; cp -r dist/ todomvc-example/src/redux-usage-report"
   },
   "jest": {
     "collectCoverageFrom": [

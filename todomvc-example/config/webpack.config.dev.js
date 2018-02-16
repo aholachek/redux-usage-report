@@ -90,12 +90,6 @@ module.exports = {
       'react-native': 'react-native-web',
     },
     plugins: [
-      // Prevents users from importing files from outside of src/ (or node_modules/).
-      // This often causes confusion because we only process files within src/ with babel.
-      // To fix this, we prevent you from importing files out of src/ -- if you'd like to,
-      // please link the files into your node_modules/ and let module-resolution kick in.
-      // Make sure your source files are compiled, as they will not be processed in any way.
-      new ModuleScopePlugin(paths.appSrc, [paths.appPackageJson]),
     ],
   },
   module: {
@@ -107,21 +101,21 @@ module.exports = {
 
       // First, run the linter.
       // It's important to do this before Babel processes the JS.
-      {
-        test: /\.(js|jsx|mjs)$/,
-        enforce: 'pre',
-        use: [
-          {
-            options: {
-              formatter: eslintFormatter,
-              eslintPath: require.resolve('eslint'),
+      // {
+      //   test: /\.(js|jsx|mjs)$/,
+      //   enforce: 'pre',
+      //   use: [
+      //     {
+      //       options: {
+      //         formatter: eslintFormatter,
+      //         eslintPath: require.resolve('eslint'),
 
-            },
-            loader: require.resolve('eslint-loader'),
-          },
-        ],
-        include: paths.appSrc,
-      },
+      //       },
+      //       loader: require.resolve('eslint-loader'),
+      //     },
+      //   ],
+      //   include: paths.appSrc,
+      // },
       {
         // "oneOf" will traverse all following loaders until one will
         // match the requirements. When no loader matches it will fall

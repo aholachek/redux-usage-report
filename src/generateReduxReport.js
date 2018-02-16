@@ -7,7 +7,8 @@ import { createMakeProxyFunction } from "./trackObjectUse"
 // or else we won't know whether to ignore object access
 // from non-local code (e.g node_modules, browser extensions...)
 import "source-map-support/browser-source-map-support"
-sourceMapSupport.install()
+
+sourceMapSupport.install() // eslint-disable-line
 
 const localStorageKey = "reduxUsageReportBreakpoints"
 
@@ -40,10 +41,6 @@ const shouldSkipProxy = (target, propKey) => {
     !!initiatingFunc &&
     (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) ||
       initiatingFunc.fileName.match(/extension:\/\//))
-
- if (initiatingFuncNotLocal){
-   console.log('not local',initiatingFunc)
- }
 
   if (
     !!initiatingFuncNotLocal ||

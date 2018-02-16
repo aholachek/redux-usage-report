@@ -9,9 +9,28 @@ import {
 
 const initialState = [
   {
-    text: "Use Redux",
+    text: "Twas brillig and the slithy toves",
     completed: false,
-    id: 0
+    id: 0,
+    someExtraData: {
+      thisObj: "isUnused"
+    }
+  },
+  {
+    text: "Did gyre and gimbel in the wabe",
+    completed: false,
+    someExtraData: {
+      thisObj: "isUnused"
+    },
+    id: 1
+  },
+  {
+    text: "All mimsy were the borogroves",
+    completed: false,
+    someExtraData: {
+      thisObj: "isUnused"
+    },
+    id: 3
   }
 ]
 
@@ -24,7 +43,7 @@ export default function todos(state = initialState, action) {
           id: state.reduce((maxId, todo) => Math.max(todo.id, maxId), -1) + 1,
           completed: false,
           text: action.text,
-          aRandomObject: {
+          thisObjectIsntAccessed: {
             a: Math.random().toFixed(3),
             b: Math.random().toFixed(4)
           },
