@@ -4,6 +4,14 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
+var _keys = require("babel-runtime/core-js/object/keys");
+
+var _keys2 = _interopRequireDefault(_keys);
+
 var _deepObjectDiff = require("deep-object-diff");
 
 var _stacktraceJs = require("stacktrace-js");
@@ -18,16 +26,19 @@ require("source-map-support/browser-source-map-support");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-sourceMapSupport.install(); // eslint-disable-line
-
 // we need source maps for the stack traces
 // or else we won't know whether to ignore object access
 // from non-local code (e.g node_modules, browser extensions...)
+// this raises an error during jest tests so limit to development
+if (process.env.NODE_ENV === "development") {
+  sourceMapSupport.install(); // eslint-disable-line
+}
+
 var localStorageKey = "reduxUsageReportBreakpoints";
 
 // so that JSON.stringify doesn't remove all undefined fields
 function replaceUndefinedWithNull(obj) {
-  Object.keys(obj).forEach(function (k) {
+  (0, _keys2.default)(obj).forEach(function (k) {
     var val = obj[k];
     if (val === undefined) {
       obj[k] = null;
@@ -74,8 +85,8 @@ function generateReduxReport(global, rootReducer) {
     },
     generate: function generate() {
       global.reduxReport.__inProgress = true;
-      var used = JSON.parse(JSON.stringify(this.accessedState));
-      var stateCopy = JSON.parse(JSON.stringify(this.state));
+      var used = JSON.parse((0, _stringify2.default)(this.accessedState));
+      var stateCopy = JSON.parse((0, _stringify2.default)(this.state));
       var unused = (0, _deepObjectDiff.diff)(stateCopy, used);
       replaceUndefinedWithNull(unused);
       var report = {
