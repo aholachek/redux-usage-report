@@ -2,13 +2,15 @@ import { diff } from "deep-object-diff"
 import StackTrace from "stacktrace-js"
 import { isObjectOrArray } from "./utility"
 import { createMakeProxyFunction } from "./trackObjectUse"
+import "source-map-support/browser-source-map-support"
 
 // we need source maps for the stack traces
 // or else we won't know whether to ignore object access
 // from non-local code (e.g node_modules, browser extensions...)
-import "source-map-support/browser-source-map-support"
-
-sourceMapSupport.install() // eslint-disable-line
+// this raises an error during jest tests so limit to development
+if (process.env.NODE_ENV === "development") {
+  sourceMapSupport.install() // eslint-disable-line
+}
 
 const localStorageKey = "reduxUsageReportBreakpoints"
 
