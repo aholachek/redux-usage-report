@@ -57,8 +57,8 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "node scripts/build.js",
-    "deploy": "surge build --domain elite-orange.surge.sh/",
+    "build": "yarn run update-redux-report; node scripts/build.js",
+    "deploy": "yarn run build; surge build --domain elite-orange.surge.sh/",
     "test": "node scripts/test.js",
     "update-redux-report" : "cd ../; npm run build; cp -r dist/ todomvc-example/src/redux-usage-report"
   },

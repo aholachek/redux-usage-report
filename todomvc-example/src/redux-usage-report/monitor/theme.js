@@ -1,4 +1,9 @@
-export default {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
   scheme: "nicinabox",
   author: "nicinabox (http://github.com/nicinabox)",
   base00: "#2A2F3A",

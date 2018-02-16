@@ -1,11 +1,19 @@
-import { isObjectOrArray, isUndefined } from './utility';
+'use strict';
 
-export var createMakeProxyFunction = function createMakeProxyFunction(_ref) {
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.createMakeProxyFunction = undefined;
+exports.default = trackObjectUse;
+
+var _utility = require('./utility');
+
+var createMakeProxyFunction = exports.createMakeProxyFunction = function createMakeProxyFunction(_ref) {
   var _ref$keepOriginalValu = _ref.keepOriginalValues,
       keepOriginalValues = _ref$keepOriginalValu === undefined ? false : _ref$keepOriginalValu,
       shouldSkipProxy = _ref.shouldSkipProxy,
       accessedProperties = _ref.accessedProperties,
-      breakpoint = _ref.breakpoint;
+      getBreakpoint = _ref.getBreakpoint;
 
   return function makeProxy(obj) {
     var stateLocation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -13,7 +21,7 @@ export var createMakeProxyFunction = function createMakeProxyFunction(_ref) {
     var handler = {
       get: function get(target, propKey) {
         var value = target[propKey];
-        if (!isUndefined(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value;
+        if (!(0, _utility.isUndefined)(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value;
 
         var accessedPropertiesPointer = !stateLocation ? accessedProperties : stateLocation.split('.').reduce(function (acc, key) {
           return acc[key];
@@ -21,17 +29,18 @@ export var createMakeProxyFunction = function createMakeProxyFunction(_ref) {
 
         var newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey;
         // allow people to examine the stack at certain access points
-        if (breakpoint === newStateLocation) {
+        if (getBreakpoint() === newStateLocation) {
           // explore the callstack to see when your app accesses a value
+          console.log('match');
           debugger;
         }
-        if (isObjectOrArray(value)) {
+        if ((0, _utility.isObjectOrArray)(value)) {
           if (!accessedPropertiesPointer[propKey]) {
             accessedPropertiesPointer[propKey] = Array.isArray(value) ? [] : {};
           }
           return makeProxy(value, newStateLocation);
         } else {
-          if (isUndefined(accessedPropertiesPointer[propKey]) || !keepOriginalValues) {
+          if ((0, _utility.isUndefined)(accessedPropertiesPointer[propKey]) || !keepOriginalValues) {
             accessedPropertiesPointer[propKey] = value;
           }
           return value;
@@ -42,7 +51,7 @@ export var createMakeProxyFunction = function createMakeProxyFunction(_ref) {
   };
 };
 
-export default function trackObjectUse(obj) {
+function trackObjectUse(obj) {
   var _ref2 = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {},
       _ref2$keepOriginalVal = _ref2.keepOriginalValues,
       keepOriginalValues = _ref2$keepOriginalVal === undefined ? true : _ref2$keepOriginalVal;

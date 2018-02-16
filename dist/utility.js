@@ -1,6 +1,11 @@
-export var isObjectOrArray = function isObjectOrArray(x) {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var isObjectOrArray = exports.isObjectOrArray = function isObjectOrArray(x) {
   return x === Object(x) && typeof x !== 'function';
 };
-export var isUndefined = function isUndefined(x) {
+var isUndefined = exports.isUndefined = function isUndefined(x) {
   return x === undefined;
 };

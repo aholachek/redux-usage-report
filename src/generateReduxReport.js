@@ -85,7 +85,7 @@ function generateReduxReport(global, rootReducer) {
   const makeProxy = createMakeProxyFunction({
     shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
-    breakpoint: (global.localStorage && global.localStorage.getItem(localStorageKey)) || []
+    getBreakpoint: () => global.localStorage && global.localStorage.getItem(localStorageKey)
   })
 
   return (prevState, action) => {
