@@ -10,3 +10,5 @@ yarn-error.log*
 
 redux_report--unused.json
 redux_report--used.json
+
+.cache
