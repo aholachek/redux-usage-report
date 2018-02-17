@@ -9,7 +9,7 @@ If you want to know exactly when a certain value is being accessed, you can set 
 **Set up:**
 
 ```js
-yarn install redux-usage-report
+yarn install redux-usage-report redux-devtools redux-devtools-dock-monitor
 ```
 
 ## Create the dev tools
@@ -55,7 +55,7 @@ Make sure to [only include the devtools for your development build](https://gith
 
 The json view of your store will show the parts that have been not accessed at least once at half opacity:
 
-![view of the usage monitor](./images/sample-view.png)
+![view of the usage monitor](./images/view.png)
 
 You can set a breakpoint by doing `shift + click` on any key. The next time the key is accessed, the debugger will stop execution. Feel free to reload the page, the breakpoint will persist until you remove it.
 
