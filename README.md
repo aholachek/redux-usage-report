@@ -66,6 +66,6 @@ You can set a breakpoint by doing `shift + click` on any key. The next time the 
 
 The generateReduxReport enhancer wraps the store in a proxy, so that each object access can be tracked.
 
-It tries to be smart about ignoring object accesses that come from outside your app's code, for instance from the React devtools extension or another redux store enhancer, but the logic is imperfect (it works best in Chrome or with simpler types of [source map setups](https://webpack.js.org/configuration/devtool/).)
+It tries to be smart about ignoring object accesses that come from outside your app's code, for instance from the React devtools extension or another redux store enhancer, but the logic is imperfect (it works best in Chrome or with simpler types of [source map setups](https://webpack.js.org/configuration/devtool/)).
 
-If you are curious as to why a value is marked "accessed", you can always `shift + click` it in the monitor to set a breakpoint when it is accessed.
+If you are curious as to why a value is marked "accessed", you can always `shift + click` it in the monitor to set a breakpoint.
