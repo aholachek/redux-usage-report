@@ -2,6 +2,8 @@ import { diff } from "deep-object-diff"
 import StackTrace from "stacktrace-js"
 import { isObjectOrArray } from "./utility"
 import { createMakeProxyFunction } from "./trackObjectUse"
+import cloneDeep from "lodash.clone"
+import throttle from "lodash.throttle"
 import "source-map-support/browser-source-map-support"
 
 // we need source maps for the stack traces
@@ -60,6 +62,12 @@ function generateReduxReport(global, rootReducer) {
   global.reduxReport = global.reduxReport || {
     accessedState: {},
     state: {},
+    setOnChangeCallback(cb) {
+      this.onChangeCallback = throttle(cb, 500)
+    },
+    removeOnChangeCallback() {
+      this.onChangeCallback = undefined
+    },
     setBreakpoint: function(breakpoint) {
       if (!global.localStorage) return
       global.localStorage.setItem(localStorageKey, breakpoint)
@@ -70,8 +78,8 @@ function generateReduxReport(global, rootReducer) {
     },
     generate() {
       global.reduxReport.__inProgress = true
-      const used = JSON.parse(JSON.stringify(this.accessedState))
-      const stateCopy = JSON.parse(JSON.stringify(this.state))
+      const used = cloneDeep(this.accessedState)
+      const stateCopy = cloneDeep(this.state)
       const unused = diff(stateCopy, used)
       replaceUndefinedWithNull(unused)
       const report = {
@@ -87,7 +95,8 @@ function generateReduxReport(global, rootReducer) {
   const makeProxy = createMakeProxyFunction({
     shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
-    getBreakpoint: () => global.localStorage && global.localStorage.getItem(localStorageKey)
+    getBreakpoint: () => global.localStorage && global.localStorage.getItem(localStorageKey),
+    onChange: global.reduxReport.onChangeCallback
   })
 
   return (prevState, action) => {

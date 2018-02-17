@@ -4,10 +4,6 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _stringify = require("babel-runtime/core-js/json/stringify");
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
 var _keys = require("babel-runtime/core-js/object/keys");
 
 var _keys2 = _interopRequireDefault(_keys);
@@ -21,6 +17,14 @@ var _stacktraceJs2 = _interopRequireDefault(_stacktraceJs);
 var _utility = require("./utility");
 
 var _trackObjectUse = require("./trackObjectUse");
+
+var _lodash = require("lodash.clone");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
+var _lodash3 = require("lodash.throttle");
+
+var _lodash4 = _interopRequireDefault(_lodash3);
 
 require("source-map-support/browser-source-map-support");
 
@@ -75,6 +79,13 @@ function generateReduxReport(global, rootReducer) {
   global.reduxReport = global.reduxReport || {
     accessedState: {},
     state: {},
+    setOnChangeCallback: function setOnChangeCallback(cb) {
+      this.onChangeCallback = (0, _lodash4.default)(cb, 500);
+    },
+    removeOnChangeCallback: function removeOnChangeCallback() {
+      this.onChangeCallback = undefined;
+    },
+
     setBreakpoint: function setBreakpoint(breakpoint) {
       if (!global.localStorage) return;
       global.localStorage.setItem(localStorageKey, breakpoint);
@@ -85,8 +96,8 @@ function generateReduxReport(global, rootReducer) {
     },
     generate: function generate() {
       global.reduxReport.__inProgress = true;
-      var used = JSON.parse((0, _stringify2.default)(this.accessedState));
-      var stateCopy = JSON.parse((0, _stringify2.default)(this.state));
+      var used = (0, _lodash2.default)(this.accessedState);
+      var stateCopy = (0, _lodash2.default)(this.state);
       var unused = (0, _deepObjectDiff.diff)(stateCopy, used);
       replaceUndefinedWithNull(unused);
       var report = {
@@ -104,7 +115,8 @@ function generateReduxReport(global, rootReducer) {
     accessedProperties: global.reduxReport.accessedState,
     getBreakpoint: function getBreakpoint() {
       return global.localStorage && global.localStorage.getItem(localStorageKey);
-    }
+    },
+    onChange: global.reduxReport.onChangeCallback
   });
 
   return function (prevState, action) {

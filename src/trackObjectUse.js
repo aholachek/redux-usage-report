@@ -4,7 +4,8 @@ export const createMakeProxyFunction = ({
   keepOriginalValues = false,
   shouldSkipProxy,
   accessedProperties,
-  getBreakpoint = () => {}
+  getBreakpoint = () => {},
+  onChange = () => {}
 }) => {
   return function makeProxy(obj, stateLocation = "") {
     const handler = {
@@ -19,6 +20,8 @@ export const createMakeProxyFunction = ({
             }, accessedProperties)
 
         const newStateLocation = stateLocation ? stateLocation + "." + propKey : propKey
+        onChange(newStateLocation)
+
         // allow people to examine the stack at certain access points
         if (getBreakpoint() === newStateLocation) {
           // explore the callstack to see when your app accesses a value

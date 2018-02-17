@@ -37,14 +37,26 @@ class ReduxTree extends Component {
     }
   }
 
+  componentDidMount () {
+    window.reduxReport.setOnChangeCallback(this.updateReport)
+  }
+
+  componentWillUnmount () {
+    window.reduxReport.removeOnChangeCallback()
+  }
+
+  updateReport = () => {
+    const report = window.reduxReport.generate()
+    this.setState({
+      used: report.used,
+      unused: report.unused,
+      stateCopy: report.stateCopy
+    })
+  }
+
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.computedStates.length !== this.props.computedStates.length) {
-      const report = window.reduxReport.generate()
-      this.setState({
-        used: report.used,
-        unused: report.unused,
-        stateCopy: report.stateCopy
-      })
+      this.updateReport()
     }
   }
 

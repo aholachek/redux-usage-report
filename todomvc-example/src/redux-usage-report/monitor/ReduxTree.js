@@ -67,14 +67,18 @@ var ReduxTree = function (_Component) {
 
     var _this = (0, _possibleConstructorReturn3.default)(this, (ReduxTree.__proto__ || (0, _getPrototypeOf2.default)(ReduxTree)).call(this, props));
 
+    _this.updateReport = function () {
+      var report = window.reduxReport.generate();
+      _this.setState({
+        used: report.used,
+        unused: report.unused,
+        stateCopy: report.stateCopy
+      });
+    };
+
     _this.componentDidUpdate = function (prevProps, prevState) {
       if (prevProps.computedStates.length !== _this.props.computedStates.length) {
-        var report = window.reduxReport.generate();
-        _this.setState({
-          used: report.used,
-          unused: report.unused,
-          stateCopy: report.stateCopy
-        });
+        _this.updateReport();
       }
     };
 
@@ -82,7 +86,7 @@ var ReduxTree = function (_Component) {
       return function (e) {
         if (!e.shiftKey) return;
         if (breakpointPath === _this.props.currentBreakpoint) {
-          _this.props.setBreakpoint(null);
+          _this.props.setBreakpoint("");
         } else {
           _this.props.setBreakpoint(breakpointPath);
         }
@@ -143,6 +147,16 @@ var ReduxTree = function (_Component) {
   }
 
   (0, _createClass3.default)(ReduxTree, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      window.reduxReport.setOnChangeCallback(this.updateReport);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      window.reduxReport.removeOnChangeCallback();
+    }
+  }, {
     key: "isUsed",
     value: function isUsed(path) {
       var used = this.state.used;

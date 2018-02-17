@@ -173,7 +173,7 @@ var ReduxUsageMonitor = function (_Component) {
 }(_react.Component);
 
 ReduxUsageMonitor.propTypes = {
-  computedStates: _propTypes2.default.array.isRequired
+  computedStates: _propTypes2.default.array
 };
 
 ReduxUsageMonitor.update = function () {};

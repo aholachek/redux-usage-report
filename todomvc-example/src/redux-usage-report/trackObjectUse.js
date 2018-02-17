@@ -14,7 +14,9 @@ var createMakeProxyFunction = exports.createMakeProxyFunction = function createM
       shouldSkipProxy = _ref.shouldSkipProxy,
       accessedProperties = _ref.accessedProperties,
       _ref$getBreakpoint = _ref.getBreakpoint,
-      getBreakpoint = _ref$getBreakpoint === undefined ? function () {} : _ref$getBreakpoint;
+      getBreakpoint = _ref$getBreakpoint === undefined ? function () {} : _ref$getBreakpoint,
+      _ref$onChange = _ref.onChange,
+      onChange = _ref$onChange === undefined ? function () {} : _ref$onChange;
 
   return function makeProxy(obj) {
     var stateLocation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
@@ -29,6 +31,8 @@ var createMakeProxyFunction = exports.createMakeProxyFunction = function createM
         }, accessedProperties);
 
         var newStateLocation = stateLocation ? stateLocation + "." + propKey : propKey;
+        onChange(newStateLocation);
+
         // allow people to examine the stack at certain access points
         if (getBreakpoint() === newStateLocation) {
           // explore the callstack to see when your app accesses a value
