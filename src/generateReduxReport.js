@@ -63,10 +63,10 @@ function generateReduxReport(global, rootReducer) {
     accessedState: {},
     state: {},
     setOnChangeCallback(cb) {
-      this.onChangeCallback = throttle(cb, 500)
+      global.reduxReport.onChangeCallback = throttle(cb, 1000)
     },
     removeOnChangeCallback() {
-      this.onChangeCallback = undefined
+      global.reduxReport.onChangeCallback = undefined
     },
     setBreakpoint: function(breakpoint) {
       if (!global.localStorage) return

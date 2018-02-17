@@ -4,7 +4,7 @@ import JSONTree from "react-json-tree"
 import styled from "styled-components"
 
 const FadeSpan = styled.span`
-  opacity: ${props => (props.fullOpacity ? 1 : 0.35)};
+  opacity: ${props => (props.fullOpacity ? 1 : 0.3)};
   font-size: 16.5px;
   line-height: 1.4;
 `
@@ -24,24 +24,20 @@ class ReduxTree extends Component {
     setBreakpoint: PropTypes.func.isRequired
   }
 
-  constructor(props) {
-    super(props)
+  state = {}
 
+  componentDidMount() {
     const { used, unused, stateCopy } = window.reduxReport.generate()
 
-    this.state = {
+    this.setState({
       used,
       unused,
-      stateCopy,
-      expandedPaths: []
-    }
-  }
-
-  componentDidMount () {
+      stateCopy
+    })
     window.reduxReport.setOnChangeCallback(this.updateReport)
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     window.reduxReport.removeOnChangeCallback()
   }
 
@@ -118,6 +114,8 @@ class ReduxTree extends Component {
         labelRenderer={this.labelRenderer}
         // force re-rendering when breakpoint changes
         currentBreakpoint={this.props.currentBreakpoint}
+        // force re-rendering when "used" report key changes
+        used={this.state.used}
       />
     )
   }
