@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
@@ -6,32 +6,32 @@ Object.defineProperty(exports, "__esModule", {
 exports.createMakeProxyFunction = undefined;
 exports.default = trackObjectUse;
 
-var _utility = require('./utility');
+var _utility = require("./utility");
 
 var createMakeProxyFunction = exports.createMakeProxyFunction = function createMakeProxyFunction(_ref) {
   var _ref$keepOriginalValu = _ref.keepOriginalValues,
       keepOriginalValues = _ref$keepOriginalValu === undefined ? false : _ref$keepOriginalValu,
       shouldSkipProxy = _ref.shouldSkipProxy,
       accessedProperties = _ref.accessedProperties,
-      getBreakpoint = _ref.getBreakpoint;
+      _ref$getBreakpoint = _ref.getBreakpoint,
+      getBreakpoint = _ref$getBreakpoint === undefined ? function () {} : _ref$getBreakpoint;
 
   return function makeProxy(obj) {
-    var stateLocation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+    var stateLocation = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "";
 
     var handler = {
       get: function get(target, propKey) {
         var value = target[propKey];
         if (!(0, _utility.isUndefined)(shouldSkipProxy) && shouldSkipProxy(target, propKey)) return value;
 
-        var accessedPropertiesPointer = !stateLocation ? accessedProperties : stateLocation.split('.').reduce(function (acc, key) {
+        var accessedPropertiesPointer = !stateLocation ? accessedProperties : stateLocation.split(".").reduce(function (acc, key) {
           return acc[key];
         }, accessedProperties);
 
-        var newStateLocation = stateLocation ? stateLocation + '.' + propKey : propKey;
+        var newStateLocation = stateLocation ? stateLocation + "." + propKey : propKey;
         // allow people to examine the stack at certain access points
         if (getBreakpoint() === newStateLocation) {
           // explore the callstack to see when your app accesses a value
-          console.log('match');
           debugger;
         }
         if ((0, _utility.isObjectOrArray)(value)) {

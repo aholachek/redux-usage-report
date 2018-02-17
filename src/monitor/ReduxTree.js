@@ -1,6 +1,6 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
-import JSONTree from "./react-json-tree-modified"
+import JSONTree from "react-json-tree"
 import styled from "styled-components"
 
 const FadeSpan = styled.span`

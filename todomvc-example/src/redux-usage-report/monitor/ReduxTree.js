@@ -4,10 +4,32 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
 
-var _templateObject = _taggedTemplateLiteral(["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"], ["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"]),
-    _templateObject2 = _taggedTemplateLiteral(["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"], ["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"]);
+var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
+
+var _classCallCheck2 = require("babel-runtime/helpers/classCallCheck");
+
+var _classCallCheck3 = _interopRequireDefault(_classCallCheck2);
+
+var _createClass2 = require("babel-runtime/helpers/createClass");
+
+var _createClass3 = _interopRequireDefault(_createClass2);
+
+var _possibleConstructorReturn2 = require("babel-runtime/helpers/possibleConstructorReturn");
+
+var _possibleConstructorReturn3 = _interopRequireDefault(_possibleConstructorReturn2);
+
+var _inherits2 = require("babel-runtime/helpers/inherits");
+
+var _inherits3 = _interopRequireDefault(_inherits2);
+
+var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiteral");
+
+var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
+
+var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"], ["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"]),
+    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"], ["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"]);
 
 var _react = require("react");
 
@@ -17,23 +39,15 @@ var _propTypes = require("prop-types");
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactJsonTree = require("react-json-tree");
+var _reactJsonTreeModified = require("./react-json-tree-modified");
 
-var _reactJsonTree2 = _interopRequireDefault(_reactJsonTree);
+var _reactJsonTreeModified2 = _interopRequireDefault(_reactJsonTreeModified);
 
 var _styledComponents = require("styled-components");
 
 var _styledComponents2 = _interopRequireDefault(_styledComponents);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-function _taggedTemplateLiteral(strings, raw) { return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
 
 var FadeSpan = _styledComponents2.default.span(_templateObject, function (props) {
   return props.fullOpacity ? 1 : 0.35;
@@ -46,12 +60,12 @@ var KeySpan = FadeSpan.extend(_templateObject2, function (props) {
 });
 
 var ReduxTree = function (_Component) {
-  _inherits(ReduxTree, _Component);
+  (0, _inherits3.default)(ReduxTree, _Component);
 
   function ReduxTree(props) {
-    _classCallCheck(this, ReduxTree);
+    (0, _classCallCheck3.default)(this, ReduxTree);
 
-    var _this = _possibleConstructorReturn(this, (ReduxTree.__proto__ || Object.getPrototypeOf(ReduxTree)).call(this, props));
+    var _this = (0, _possibleConstructorReturn3.default)(this, (ReduxTree.__proto__ || (0, _getPrototypeOf2.default)(ReduxTree)).call(this, props));
 
     _this.componentDidUpdate = function (prevProps, prevState) {
       if (prevProps.computedStates.length !== _this.props.computedStates.length) {
@@ -124,7 +138,7 @@ var ReduxTree = function (_Component) {
     return _this;
   }
 
-  _createClass(ReduxTree, [{
+  (0, _createClass3.default)(ReduxTree, [{
     key: "isUsed",
     value: function isUsed(path) {
       var used = this.state.used;
@@ -137,7 +151,7 @@ var ReduxTree = function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return _react2.default.createElement(_reactJsonTree2.default, {
+      return _react2.default.createElement(_reactJsonTreeModified2.default, {
         data: this.state.stateCopy,
         hideRoot: true,
         theme: this.props.theme,
@@ -150,7 +164,6 @@ var ReduxTree = function (_Component) {
       });
     }
   }]);
-
   return ReduxTree;
 }(_react.Component);
 
