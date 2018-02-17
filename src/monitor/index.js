@@ -59,7 +59,7 @@ const ContentContainer = styled.div`
 
 class ReduxUsageMonitor extends Component {
   static propTypes = {
-    computedStates: PropTypes.array.isRequired
+    computedStates: PropTypes.array
   }
 
   static update = function() {}

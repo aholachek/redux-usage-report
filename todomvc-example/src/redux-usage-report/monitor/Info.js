@@ -8,7 +8,9 @@ var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiter
 
 var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
 
-var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  margin: 0;\n  margin-bottom: 1rem;\n  padding: 0;\n  border: 0;\n  border-radius: 3px;\n  background: none;\n  font-size: 100%;\n  vertical-align: baseline;\n  font-family: inherit;\n  font-weight: inherit;\n  color: ", ";\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  -webkit-font-smoothing: antialiased;\n  background-color: ", ";\n  padding: 8px 12px;\n  font-weight: bold;\n  cursor: pointer;\n  &:hover,\n  &:focus {\n    background-color: ", ";\n  }\n"], ["\n  margin: 0;\n  margin-bottom: 1rem;\n  padding: 0;\n  border: 0;\n  border-radius: 3px;\n  background: none;\n  font-size: 100%;\n  vertical-align: baseline;\n  font-family: inherit;\n  font-weight: inherit;\n  color: ", ";\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  -webkit-font-smoothing: antialiased;\n  background-color: ", ";\n  padding: 8px 12px;\n  font-weight: bold;\n  cursor: pointer;\n  &:hover,\n  &:focus {\n    background-color: ", ";\n  }\n"]);
+var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  margin: 0 0 1rem 0;\n  padding: 0;\n  border: 0;\n  border-radius: 3px;\n  background: none;\n  font-size: 100%;\n  vertical-align: baseline;\n  font-family: inherit;\n  font-weight: inherit;\n  color: ", ";\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  -webkit-font-smoothing: antialiased;\n  background-color: ", ";\n  padding: 8px 12px;\n  font-weight: bold;\n  cursor: pointer;\n  &:hover,\n  &:focus {\n    background-color: ", ";\n  }\n"], ["\n  margin: 0 0 1rem 0;\n  padding: 0;\n  border: 0;\n  border-radius: 3px;\n  background: none;\n  font-size: 100%;\n  vertical-align: baseline;\n  font-family: inherit;\n  font-weight: inherit;\n  color: ", ";\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  -webkit-font-smoothing: antialiased;\n  background-color: ", ";\n  padding: 8px 12px;\n  font-weight: bold;\n  cursor: pointer;\n  &:hover,\n  &:focus {\n    background-color: ", ";\n  }\n"]),
+    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  font-size: 1.5rem;\n  margin-top: 1.5rem;\n  margin-bottom: 1.5rem;\n  font-weight: bold;\n"], ["\n  font-size: 1.5rem;\n  margin-top: 1.5rem;\n  margin-bottom: 1.5rem;\n  font-weight: bold;\n"]),
+    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  margin-top: 1rem;\n"], ["\n  margin-top: 1rem;\n"]);
 
 var _react = require("react");
 
@@ -38,6 +40,10 @@ var Button = _styledComponents2.default.button(_templateObject, function (props)
   return props.theme.base0D;
 });
 
+var Header = _styledComponents2.default.h3(_templateObject2);
+
+var SpacingWrapper = _styledComponents2.default.div(_templateObject3);
+
 var Info = function Info(_ref) {
   var currentBreakpoint = _ref.currentBreakpoint,
       setBreakpoint = _ref.setBreakpoint,
@@ -50,7 +56,7 @@ var Info = function Info(_ref) {
     "div",
     null,
     _react2.default.createElement(
-      "h3",
+      Header,
       null,
       "What it shows"
     ),
@@ -73,13 +79,13 @@ var Info = function Info(_ref) {
         "To learn more, check out ",
         _react2.default.createElement(
           "a",
-          { href: "" },
+          { href: "https://github.com/aholachek/redux-usage-report#redux-usage-report" },
           " the README."
         )
       )
     ),
     _react2.default.createElement(
-      "h3",
+      Header,
       null,
       "Setting a breakpoint"
     ),
@@ -92,12 +98,16 @@ var Info = function Info(_ref) {
         "There is currently a breakpoint set at",
         " ",
         _react2.default.createElement(
-          "pre",
+          SpacingWrapper,
           null,
           _react2.default.createElement(
-            "code",
+            "pre",
             null,
-            currentBreakpoint
+            _react2.default.createElement(
+              "code",
+              null,
+              currentBreakpoint
+            )
           )
         ),
         _react2.default.createElement(

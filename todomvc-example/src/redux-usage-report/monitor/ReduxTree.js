@@ -39,9 +39,9 @@ var _propTypes = require("prop-types");
 
 var _propTypes2 = _interopRequireDefault(_propTypes);
 
-var _reactJsonTreeModified = require("./react-json-tree-modified");
+var _reactJsonTree = require("react-json-tree");
 
-var _reactJsonTreeModified2 = _interopRequireDefault(_reactJsonTreeModified);
+var _reactJsonTree2 = _interopRequireDefault(_reactJsonTree);
 
 var _styledComponents = require("styled-components");
 
@@ -81,7 +81,11 @@ var ReduxTree = function (_Component) {
     _this.setBreakpointOnClick = function (breakpointPath) {
       return function (e) {
         if (!e.shiftKey) return;
-        _this.props.setBreakpoint(breakpointPath);
+        if (breakpointPath === _this.props.currentBreakpoint) {
+          _this.props.setBreakpoint(null);
+        } else {
+          _this.props.setBreakpoint(breakpointPath);
+        }
         e.stopPropagation();
       };
     };
@@ -151,7 +155,7 @@ var ReduxTree = function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return _react2.default.createElement(_reactJsonTreeModified2.default, {
+      return _react2.default.createElement(_reactJsonTree2.default, {
         data: this.state.stateCopy,
         hideRoot: true,
         theme: this.props.theme,

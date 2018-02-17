@@ -59,7 +59,11 @@ class ReduxTree extends Component {
 
   setBreakpointOnClick = breakpointPath => e => {
     if (!e.shiftKey) return
-    this.props.setBreakpoint(breakpointPath)
+    if (breakpointPath === this.props.currentBreakpoint) {
+      this.props.setBreakpoint("")
+    } else {
+      this.props.setBreakpoint(breakpointPath)
+    }
     e.stopPropagation()
   }
 

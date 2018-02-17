@@ -9,8 +9,7 @@ const propTypes = {
 }
 
 const Button = styled.button`
-  margin: 0;
-  margin-bottom: 1rem;
+  margin: 0 0 1rem 0;
   padding: 0;
   border: 0;
   border-radius: 3px;
@@ -34,11 +33,22 @@ const Button = styled.button`
   }
 `
 
+const Header = styled.h3`
+  font-size: 1.5rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  font-weight: bold;
+`
+
+const SpacingWrapper = styled.div`
+  margin-top: 1rem;
+`
+
 const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
   const removeBreakpoint = () => setBreakpoint("")
   return (
     <div>
-      <h3>What it shows</h3>
+      <Header>What it shows</Header>
       <div>
         <p>
           This monitor shows you a view of your Redux store based on what parts of it your code has
@@ -46,17 +56,19 @@ const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
         </p>
         <p>Values that have not been accessed are faded out.</p>
         <p>
-          To learn more, check out <a href=""> the README.</a>
+          To learn more, check out <a href="https://github.com/aholachek/redux-usage-report#redux-usage-report"> the README.</a>
         </p>
       </div>
-      <h3>Setting a breakpoint</h3>
+      <Header>Setting a breakpoint</Header>
       <div>
         {!!currentBreakpoint && (
           <div>
             There is currently a breakpoint set at{" "}
-            <pre>
-              <code>{currentBreakpoint}</code>
-            </pre>
+            <SpacingWrapper>
+              <pre>
+                <code>{currentBreakpoint}</code>
+              </pre>
+            </SpacingWrapper>
             <Button onClick={removeBreakpoint} theme={theme}>
               Remove breakpoint
             </Button>
