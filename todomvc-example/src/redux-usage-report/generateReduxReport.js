@@ -116,7 +116,11 @@ function generateReduxReport(global, rootReducer) {
     getBreakpoint: function getBreakpoint() {
       return global.localStorage && global.localStorage.getItem(localStorageKey);
     },
-    onChange: global.reduxReport.onChangeCallback
+    onChange: function onChange() {
+      var _global$reduxReport;
+
+      return global.reduxReport.onChangeCallback && (_global$reduxReport = global.reduxReport).onChangeCallback.apply(_global$reduxReport, arguments);
+    }
   });
 
   return function (prevState, action) {

@@ -96,7 +96,7 @@ function generateReduxReport(global, rootReducer) {
     shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
     getBreakpoint: () => global.localStorage && global.localStorage.getItem(localStorageKey),
-    onChange: global.reduxReport.onChangeCallback
+    onChange: (...args) => global.reduxReport.onChangeCallback && global.reduxReport.onChangeCallback(...args)
   })
 
   return (prevState, action) => {
