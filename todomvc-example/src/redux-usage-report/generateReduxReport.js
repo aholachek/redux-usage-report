@@ -33,9 +33,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // we need source maps for the stack traces
 // or else we won't know whether to ignore object access
 // from non-local code (e.g node_modules, browser extensions...)
+// this takes the stack trace file name from e.g.  fileName: "http://localhost:3001/static/js/bundle.js",
+// to
 // this raises an error during jest tests so limit to development
+//
 if (process.env.NODE_ENV === "development") {
-  sourceMapSupport.install(); // eslint-disable-line
+  sourceMapSupport.install({
+    environment: 'node'
+  }); // eslint-disable-line
 }
 
 var localStorageKey = "reduxUsageReportBreakpoints";
@@ -66,6 +71,8 @@ var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
     return s.functionName === "Object.get";
   }) + 1];
 
+  debugger;
+
   var initiatingFuncNotLocal = !!initiatingFunc && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
 
   if (!!initiatingFuncNotLocal || !target.hasOwnProperty(propKey) || global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) {
@@ -80,10 +87,10 @@ function generateReduxReport(global, rootReducer) {
     accessedState: {},
     state: {},
     setOnChangeCallback: function setOnChangeCallback(cb) {
-      this.onChangeCallback = (0, _lodash4.default)(cb, 500);
+      global.reduxReport.onChangeCallback = (0, _lodash4.default)(cb, 1000);
     },
     removeOnChangeCallback: function removeOnChangeCallback() {
-      this.onChangeCallback = undefined;
+      global.reduxReport.onChangeCallback = undefined;
     },
 
     setBreakpoint: function setBreakpoint(breakpoint) {

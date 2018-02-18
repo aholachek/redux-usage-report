@@ -2,6 +2,7 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import JSONTree from "react-json-tree"
 import styled from "styled-components"
+import isEqual from "lodash.isequal"
 
 const FadeSpan = styled.span`
   opacity: ${props => (props.fullOpacity ? 1 : 0.3)};
@@ -24,16 +25,10 @@ class ReduxTree extends Component {
     setBreakpoint: PropTypes.func.isRequired
   }
 
-  state = {}
+  state = { used: {}, unused: {}, stateCopy: {} }
 
   componentDidMount() {
-    const { used, unused, stateCopy } = window.reduxReport.generate()
-
-    this.setState({
-      used,
-      unused,
-      stateCopy
-    })
+    this.updateReport()
     window.reduxReport.setOnChangeCallback(this.updateReport)
   }
 
@@ -43,11 +38,13 @@ class ReduxTree extends Component {
 
   updateReport = () => {
     const report = window.reduxReport.generate()
-    this.setState({
-      used: report.used,
-      unused: report.unused,
-      stateCopy: report.stateCopy
-    })
+    if (!isEqual(this.state.used, report.used)) {
+      this.setState(() => ({
+        used: report.used,
+        unused: report.unused,
+        stateCopy: report.stateCopy
+      }))
+    }
   }
 
   componentDidUpdate = (prevProps, prevState) => {

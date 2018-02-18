@@ -47,10 +47,14 @@ var _styledComponents = require("styled-components");
 
 var _styledComponents2 = _interopRequireDefault(_styledComponents);
 
+var _lodash = require("lodash.isequal");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var FadeSpan = _styledComponents2.default.span(_templateObject, function (props) {
-  return props.fullOpacity ? 1 : 0.35;
+  return props.fullOpacity ? 1 : 0.3;
 });
 
 var KeySpan = FadeSpan.extend(_templateObject2, function (props) {
@@ -62,93 +66,24 @@ var KeySpan = FadeSpan.extend(_templateObject2, function (props) {
 var ReduxTree = function (_Component) {
   (0, _inherits3.default)(ReduxTree, _Component);
 
-  function ReduxTree(props) {
+  function ReduxTree() {
+    var _ref;
+
+    var _temp, _this, _ret;
+
     (0, _classCallCheck3.default)(this, ReduxTree);
 
-    var _this = (0, _possibleConstructorReturn3.default)(this, (ReduxTree.__proto__ || (0, _getPrototypeOf2.default)(ReduxTree)).call(this, props));
+    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
 
-    _this.updateReport = function () {
-      var report = window.reduxReport.generate();
-      _this.setState({
-        used: report.used,
-        unused: report.unused,
-        stateCopy: report.stateCopy
-      });
-    };
-
-    _this.componentDidUpdate = function (prevProps, prevState) {
-      if (prevProps.computedStates.length !== _this.props.computedStates.length) {
-        _this.updateReport();
-      }
-    };
-
-    _this.setBreakpointOnClick = function (breakpointPath) {
-      return function (e) {
-        if (!e.shiftKey) return;
-        if (breakpointPath === _this.props.currentBreakpoint) {
-          _this.props.setBreakpoint("");
-        } else {
-          _this.props.setBreakpoint(breakpointPath);
-        }
-        e.stopPropagation();
-      };
-    };
-
-    _this.getItemString = function (type, data, itemType, itemString) {
-      return _react2.default.createElement(
-        FadeSpan,
-        null,
-        itemType
-      );
-    };
-
-    _this.valueRenderer = function (val) {
-      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-        args[_key - 1] = arguments[_key];
-      }
-
-      var isUsed = _this.isUsed(args.slice(1).reverse());
-      return _react2.default.createElement(
-        FadeSpan,
-        { fullOpacity: isUsed },
-        val
-      );
-    };
-
-    _this.labelRenderer = function (keyPath, type) {
-      var isUsed = _this.isUsed(keyPath.slice().reverse());
-      var breakpointPath = keyPath.slice().reverse().join(".");
-
-      var breakpointActive = breakpointPath === _this.props.currentBreakpoint;
-
-      return _react2.default.createElement(
-        KeySpan,
-        {
-          fullOpacity: isUsed,
-          breakpointActive: breakpointActive,
-          onClick: _this.setBreakpointOnClick(breakpointPath)
-        },
-        keyPath[0]
-      );
-    };
-
-    var _window$reduxReport$g = window.reduxReport.generate(),
-        used = _window$reduxReport$g.used,
-        unused = _window$reduxReport$g.unused,
-        stateCopy = _window$reduxReport$g.stateCopy;
-
-    _this.state = {
-      used: used,
-      unused: unused,
-      stateCopy: stateCopy,
-      expandedPaths: []
-    };
-    return _this;
+    return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = ReduxTree.__proto__ || (0, _getPrototypeOf2.default)(ReduxTree)).call.apply(_ref, [this].concat(args))), _this), _initialiseProps.call(_this), _temp), (0, _possibleConstructorReturn3.default)(_this, _ret);
   }
 
   (0, _createClass3.default)(ReduxTree, [{
     key: "componentDidMount",
     value: function componentDidMount() {
+      this.updateReport();
       window.reduxReport.setOnChangeCallback(this.updateReport);
     }
   }, {
@@ -179,6 +114,8 @@ var ReduxTree = function (_Component) {
         labelRenderer: this.labelRenderer
         // force re-rendering when breakpoint changes
         , currentBreakpoint: this.props.currentBreakpoint
+        // force re-rendering when "used" report key changes
+        , used: this.state.used
       });
     }
   }]);
@@ -191,4 +128,80 @@ ReduxTree.propTypes = {
   currentBreakpoint: _propTypes2.default.string,
   setBreakpoint: _propTypes2.default.func.isRequired
 };
+
+var _initialiseProps = function _initialiseProps() {
+  var _this2 = this;
+
+  this.state = { used: {}, unused: {}, stateCopy: {} };
+
+  this.updateReport = function () {
+    var report = window.reduxReport.generate();
+    if (!(0, _lodash2.default)(_this2.state.used, report.used)) {
+      _this2.setState(function () {
+        return {
+          used: report.used,
+          unused: report.unused,
+          stateCopy: report.stateCopy
+        };
+      });
+    }
+  };
+
+  this.componentDidUpdate = function (prevProps, prevState) {
+    if (prevProps.computedStates.length !== _this2.props.computedStates.length) {
+      _this2.updateReport();
+    }
+  };
+
+  this.setBreakpointOnClick = function (breakpointPath) {
+    return function (e) {
+      if (!e.shiftKey) return;
+      if (breakpointPath === _this2.props.currentBreakpoint) {
+        _this2.props.setBreakpoint("");
+      } else {
+        _this2.props.setBreakpoint(breakpointPath);
+      }
+      e.stopPropagation();
+    };
+  };
+
+  this.getItemString = function (type, data, itemType, itemString) {
+    return _react2.default.createElement(
+      FadeSpan,
+      null,
+      itemType
+    );
+  };
+
+  this.valueRenderer = function (val) {
+    for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+      args[_key2 - 1] = arguments[_key2];
+    }
+
+    var isUsed = _this2.isUsed(args.slice(1).reverse());
+    return _react2.default.createElement(
+      FadeSpan,
+      { fullOpacity: isUsed },
+      val
+    );
+  };
+
+  this.labelRenderer = function (keyPath, type) {
+    var isUsed = _this2.isUsed(keyPath.slice().reverse());
+    var breakpointPath = keyPath.slice().reverse().join(".");
+
+    var breakpointActive = breakpointPath === _this2.props.currentBreakpoint;
+
+    return _react2.default.createElement(
+      KeySpan,
+      {
+        fullOpacity: isUsed,
+        breakpointActive: breakpointActive,
+        onClick: _this2.setBreakpointOnClick(breakpointPath)
+      },
+      keyPath[0]
+    );
+  };
+};
+
 exports.default = ReduxTree;
