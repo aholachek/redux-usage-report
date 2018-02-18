@@ -13,14 +13,18 @@ const initialState = [
     completed: false,
     id: 0,
     someExtraData: {
-      thisObj: "isUnused"
+      thisObj: "isUnused",
+      thisObj2: 'isAccessedWhenCompletedIsToggled'
+
     }
   },
   {
     text: "Did gyre and gimbel in the wabe",
     completed: false,
     someExtraData: {
-      thisObj: "isUnused"
+      thisObj: "isUnused",
+      thisObj2: 'isAccessedWhenCompletedIsToggled'
+
     },
     id: 1
   },
@@ -28,7 +32,8 @@ const initialState = [
     text: "All mimsy were the borogroves",
     completed: false,
     someExtraData: {
-      thisObj: "isUnused"
+      thisObj: "isUnused",
+      thisObj2: 'isAccessedWhenCompletedIsToggled'
     },
     id: 3
   }
@@ -47,7 +52,9 @@ export default function todos(state = initialState, action) {
             a: Math.random().toFixed(3),
             b: Math.random().toFixed(4)
           },
-          thisValueIsntAccessed: "foo"
+          thisValueIsntAccessed: "foo",
+          thisObj2: 'isAccessedWhenCompletedIsToggled'
+
         }
       ]
 

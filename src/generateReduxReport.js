@@ -14,9 +14,7 @@ import "source-map-support/browser-source-map-support"
 // this raises an error during jest tests so limit to development
 //
 if (process.env.NODE_ENV === "development") {
-  sourceMapSupport.install({
-    environment: 'node',
-  }) // eslint-disable-line
+  sourceMapSupport.install() // eslint-disable-line
 
 }
 
