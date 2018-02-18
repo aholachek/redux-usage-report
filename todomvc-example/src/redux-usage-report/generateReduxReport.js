@@ -34,7 +34,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // or else we won't know whether to ignore object access
 // from non-local code (e.g node_modules, browser extensions...)
 // this takes the stack trace file name from e.g.  fileName: "http://localhost:3001/static/js/bundle.js",
-// to
+// to "http://localhost:3000/Users/alexholachek/Desktop/work/redux-usage-report/todomvc-example/src/containers/App.js
 // this raises an error during jest tests so limit to development
 //
 if (process.env.NODE_ENV === "development") {
@@ -70,8 +70,6 @@ var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
   var initiatingFunc = stackFrames[stackFrames.findIndex(function (s) {
     return s.functionName === "Object.get";
   }) + 1];
-
-  debugger;
 
   var initiatingFuncNotLocal = !!initiatingFunc && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
 

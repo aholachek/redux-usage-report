@@ -149,7 +149,14 @@ var _initialiseProps = function _initialiseProps() {
 
   this.componentDidUpdate = function (prevProps, prevState) {
     if (prevProps.computedStates.length !== _this2.props.computedStates.length) {
-      _this2.updateReport();
+      var report = window.reduxReport.generate();
+      _this2.setState(function () {
+        return {
+          used: report.used,
+          unused: report.unused,
+          stateCopy: report.stateCopy
+        };
+      });
     }
   };
 
