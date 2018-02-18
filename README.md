@@ -9,13 +9,13 @@ If you want to know exactly when a certain value is being accessed, you can set 
 ## Demo
 [Try it out on the TodoMVC app here.](https://elite-orange.surge.sh/)
 
-## Set up:
+## 1. Install the required libs
 
 ```js
 yarn install redux-usage-report redux-devtools redux-devtools-dock-monitor
 ```
 
-## 1. Create the DevTools component
+## 2. Create the DevTools component
 
 `DevTools.js`
 ```js
@@ -34,7 +34,7 @@ export default createDevTools(
 
 ```
 
-## 2. Add the `DevTools.instrument` and the `generateReduxReport` store enhancers
+## 3. Add the `DevTools.instrument` and the `generateReduxReport` store enhancers
 
 `configureStore.js`
 ```js
@@ -52,13 +52,13 @@ const enhancer = compose(
 const store = createStore(rootReducer, initialState, enhancer)
 ```
 
-## 3. Render Devtools into the app
+## 3. Render `<DevTools/>` into the app
 
 The easiest way to do this is just render the `<DevTools/>` component in your App component.
 
 [Read more about setting up redux dev tools here.](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md)
 
-Make sure to [only include the devtools for your development build](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md#exclude-devtools-from-production-builds).
+**Make sure to [only include the devtools for your development build](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md#exclude-devtools-from-production-builds)!**
 
 ## How to use it
 
