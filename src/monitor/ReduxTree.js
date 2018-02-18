@@ -49,7 +49,12 @@ class ReduxTree extends Component {
 
   componentDidUpdate = (prevProps, prevState) => {
     if (prevProps.computedStates.length !== this.props.computedStates.length) {
-      this.updateReport()
+      const report = window.reduxReport.generate()
+      this.setState(() => ({
+        used: report.used,
+        unused: report.unused,
+        stateCopy: report.stateCopy
+      }))
     }
   }
 

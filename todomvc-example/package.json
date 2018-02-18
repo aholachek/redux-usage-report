@@ -1,6 +1,6 @@
 {
   "name": "todomvc",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": true,
   "devDependencies": {
     "enzyme": "^2.8.2",
@@ -60,7 +60,7 @@
     "build": "yarn run update-redux-report; node scripts/build.js",
     "deploy": "yarn run build; surge build --domain elite-orange.surge.sh/",
     "test": "node scripts/test.js",
-    "update-redux-report" : "cd ../; npm run build; cp -r dist/ todomvc-example/src/redux-usage-report"
+    "update-redux-report": "cd ../; npm run build; cp -r dist/ todomvc-example/src/redux-usage-report"
   },
   "jest": {
     "collectCoverageFrom": [

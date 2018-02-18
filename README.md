@@ -6,7 +6,10 @@ This library tracks the way your app is using the data in your Redux store. By s
 
 If you want to know exactly when a certain value is being accessed, you can set a breakpoint to explore the call stack when the app touches that particular value.
 
-**Set up:**
+## Demo
+[Try it out on the TodoMVC app here.](https://elite-orange.surge.sh/)
+
+## Set up:
 
 ```js
 yarn install redux-usage-report redux-devtools redux-devtools-dock-monitor
