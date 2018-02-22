@@ -26,7 +26,7 @@ var _lodash3 = require("lodash.throttle");
 
 var _lodash4 = _interopRequireDefault(_lodash3);
 
-require("source-map-support/browser-source-map-support");
+require("./lib/browser-source-map-support");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -38,9 +38,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // this raises an error during jest tests so limit to development
 //
 if (process.env.NODE_ENV === "development") {
-  sourceMapSupport.install({
-    environment: 'node'
-  }); // eslint-disable-line
+  sourceMapSupport.install(); // eslint-disable-line
 }
 
 var localStorageKey = "reduxUsageReportBreakpoints";

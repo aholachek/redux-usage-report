@@ -4,7 +4,7 @@ import { isObjectOrArray } from "./utility"
 import { createMakeProxyFunction } from "./trackObjectUse"
 import cloneDeep from "lodash.clone"
 import throttle from "lodash.throttle"
-import "source-map-support/browser-source-map-support"
+import "./lib/browser-source-map-support"
 
 // we need source maps for the stack traces
 // or else we won't know whether to ignore object access
@@ -15,7 +15,6 @@ import "source-map-support/browser-source-map-support"
 //
 if (process.env.NODE_ENV === "development") {
   sourceMapSupport.install() // eslint-disable-line
-
 }
 
 const localStorageKey = "reduxUsageReportBreakpoints"
