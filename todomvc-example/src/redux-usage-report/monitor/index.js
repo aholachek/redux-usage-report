@@ -45,6 +45,10 @@ var _styledComponents = require("styled-components");
 
 var _styledComponents2 = _interopRequireDefault(_styledComponents);
 
+var _lodash = require("lodash.isequal");
+
+var _lodash2 = _interopRequireDefault(_lodash);
+
 var _theme = require("./theme");
 
 var _theme2 = _interopRequireDefault(_theme);
@@ -103,7 +107,29 @@ var ReduxUsageMonitor = function (_Component) {
 
     return _ret = (_temp = (_this = (0, _possibleConstructorReturn3.default)(this, (_ref = ReduxUsageMonitor.__proto__ || (0, _getPrototypeOf2.default)(ReduxUsageMonitor)).call.apply(_ref, [this].concat(args))), _this), _this.state = {
       showInfo: false,
-      currentBreakpoint: localStorage[localStorageKey]
+      currentBreakpoint: localStorage[localStorageKey],
+      used: {},
+      stateCopy: {}
+    }, _this.updateReport = function () {
+      var report = window.reduxReport.generate();
+      if (!(0, _lodash2.default)(_this.state.used, report.used)) {
+        _this.setState(function () {
+          return {
+            used: report.used,
+            stateCopy: report.stateCopy
+          };
+        });
+      }
+    }, _this.componentDidUpdate = function (prevProps, prevState) {
+      if (prevProps.computedStates.length !== _this.props.computedStates.length) {
+        var report = window.reduxReport.generate();
+        _this.setState(function () {
+          return {
+            used: report.used,
+            stateCopy: report.stateCopy
+          };
+        });
+      }
     }, _this.setBreakpoint = function (breakpointPath) {
       window.reduxReport.setBreakpoint(breakpointPath);
       _this.setState({ currentBreakpoint: breakpointPath });
@@ -115,6 +141,17 @@ var ReduxUsageMonitor = function (_Component) {
   }
 
   (0, _createClass3.default)(ReduxUsageMonitor, [{
+    key: "componentDidMount",
+    value: function componentDidMount() {
+      this.updateReport();
+      window.reduxReport.setOnChangeCallback(this.updateReport);
+    }
+  }, {
+    key: "componentWillUnmount",
+    value: function componentWillUnmount() {
+      window.reduxReport.removeOnChangeCallback();
+    }
+  }, {
     key: "render",
     value: function render() {
       return _react2.default.createElement(
@@ -152,7 +189,9 @@ var ReduxUsageMonitor = function (_Component) {
               theme: _theme2.default,
               currentBreakpoint: this.state.currentBreakpoint,
               setBreakpoint: this.setBreakpoint,
-              show: this.state.showInfo
+              show: this.state.showInfo,
+              used: this.state.used,
+              stateCopy: this.state.stateCopy
             })
           ),
           _react2.default.createElement(
@@ -160,9 +199,10 @@ var ReduxUsageMonitor = function (_Component) {
             { style: { display: this.state.showInfo ? "none" : "block" } },
             _react2.default.createElement(_ReduxTree2.default, {
               theme: _theme2.default,
-              computedStates: this.props.computedStates,
               currentBreakpoint: this.state.currentBreakpoint,
-              setBreakpoint: this.setBreakpoint
+              setBreakpoint: this.setBreakpoint,
+              used: this.state.used,
+              stateCopy: this.state.stateCopy
             })
           )
         )

@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _getPrototypeOf = require("babel-runtime/core-js/object/get-prototype-of");
 
 var _getPrototypeOf2 = _interopRequireDefault(_getPrototypeOf);
@@ -29,7 +33,8 @@ var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiter
 var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
 
 var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"], ["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"]),
-    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"], ["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"]);
+    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"], ["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"]),
+    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  margin-bottom: 1rem;\n"], ["\n  margin-bottom: 1rem;\n"]);
 
 var _react = require("react");
 
@@ -47,10 +52,6 @@ var _styledComponents = require("styled-components");
 
 var _styledComponents2 = _interopRequireDefault(_styledComponents);
 
-var _lodash = require("lodash.isequal");
-
-var _lodash2 = _interopRequireDefault(_lodash);
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 var FadeSpan = _styledComponents2.default.span(_templateObject, function (props) {
@@ -62,6 +63,8 @@ var KeySpan = FadeSpan.extend(_templateObject2, function (props) {
 }, function (props) {
   return props.breakpointActive ? "bold" : "normal";
 });
+
+var InfoContainer = _styledComponents2.default.div(_templateObject3);
 
 var ReduxTree = function (_Component) {
   (0, _inherits3.default)(ReduxTree, _Component);
@@ -81,20 +84,9 @@ var ReduxTree = function (_Component) {
   }
 
   (0, _createClass3.default)(ReduxTree, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      this.updateReport();
-      window.reduxReport.setOnChangeCallback(this.updateReport);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      window.reduxReport.removeOnChangeCallback();
-    }
-  }, {
     key: "isUsed",
     value: function isUsed(path) {
-      var used = this.state.used;
+      var used = this.props.used;
       for (var i = 0; i < path.length; i++) {
         used = used[path[i]];
         if (typeof used === "undefined") return false;
@@ -104,19 +96,43 @@ var ReduxTree = function (_Component) {
   }, {
     key: "render",
     value: function render() {
-      return _react2.default.createElement(_reactJsonTree2.default, {
-        data: this.state.stateCopy,
-        hideRoot: true,
-        theme: this.props.theme,
-        invertTheme: false,
-        getItemString: this.getItemString,
-        valueRenderer: this.valueRenderer,
-        labelRenderer: this.labelRenderer
-        // force re-rendering when breakpoint changes
-        , currentBreakpoint: this.props.currentBreakpoint
-        // force re-rendering when "used" report key changes
-        , used: this.state.used
-      });
+      var _props = this.props,
+          used = _props.used,
+          stateCopy = _props.stateCopy,
+          theme = _props.theme,
+          currentBreakpoint = _props.currentBreakpoint;
+
+      var usedLength = (0, _stringify2.default)(used).length;
+      var totalLength = (0, _stringify2.default)(stateCopy).length;
+      var percentUsed = usedLength > 2 ? Math.ceil(usedLength / totalLength * 100) + "%" : "N/A";
+
+      return _react2.default.createElement(
+        "div",
+        null,
+        _react2.default.createElement(
+          InfoContainer,
+          null,
+          "Percent of store used so far: ",
+          _react2.default.createElement(
+            "b",
+            null,
+            percentUsed
+          )
+        ),
+        _react2.default.createElement(_reactJsonTree2.default, {
+          data: stateCopy,
+          hideRoot: true,
+          theme: theme,
+          invertTheme: false,
+          getItemString: this.getItemString,
+          valueRenderer: this.valueRenderer,
+          labelRenderer: this.labelRenderer
+          // force re-rendering when breakpoint changes
+          , currentBreakpoint: currentBreakpoint
+          // force re-rendering when "used" report key changes
+          , used: used
+        })
+      );
     }
   }]);
   return ReduxTree;
@@ -124,41 +140,14 @@ var ReduxTree = function (_Component) {
 
 ReduxTree.propTypes = {
   theme: _propTypes2.default.object.isRequired,
-  computedStates: _propTypes2.default.array.isRequired,
   currentBreakpoint: _propTypes2.default.string,
-  setBreakpoint: _propTypes2.default.func.isRequired
+  setBreakpoint: _propTypes2.default.func.isRequired,
+  used: _propTypes2.default.object.isRequired,
+  stateCopy: _propTypes2.default.object.isRequired
 };
 
 var _initialiseProps = function _initialiseProps() {
   var _this2 = this;
-
-  this.state = { used: {}, unused: {}, stateCopy: {} };
-
-  this.updateReport = function () {
-    var report = window.reduxReport.generate();
-    if (!(0, _lodash2.default)(_this2.state.used, report.used)) {
-      _this2.setState(function () {
-        return {
-          used: report.used,
-          unused: report.unused,
-          stateCopy: report.stateCopy
-        };
-      });
-    }
-  };
-
-  this.componentDidUpdate = function (prevProps, prevState) {
-    if (prevProps.computedStates.length !== _this2.props.computedStates.length) {
-      var report = window.reduxReport.generate();
-      _this2.setState(function () {
-        return {
-          used: report.used,
-          unused: report.unused,
-          stateCopy: report.stateCopy
-        };
-      });
-    }
-  };
 
   this.setBreakpointOnClick = function (breakpointPath) {
     return function (e) {

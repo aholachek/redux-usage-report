@@ -2,7 +2,6 @@ import React, { Component } from "react"
 import PropTypes from "prop-types"
 import JSONTree from "react-json-tree"
 import styled from "styled-components"
-import isEqual from "lodash.isequal"
 
 const FadeSpan = styled.span`
   opacity: ${props => (props.fullOpacity ? 1 : 0.3)};
@@ -17,49 +16,21 @@ const KeySpan = FadeSpan.extend`
   cursor: pointer;
 `
 
+const InfoContainer = styled.div`
+  margin-bottom: 1rem;
+`
+
 class ReduxTree extends Component {
   static propTypes = {
     theme: PropTypes.object.isRequired,
-    computedStates: PropTypes.array.isRequired,
     currentBreakpoint: PropTypes.string,
-    setBreakpoint: PropTypes.func.isRequired
-  }
-
-  state = { used: {}, unused: {}, stateCopy: {} }
-
-  componentDidMount() {
-    this.updateReport()
-    window.reduxReport.setOnChangeCallback(this.updateReport)
-  }
-
-  componentWillUnmount() {
-    window.reduxReport.removeOnChangeCallback()
-  }
-
-  updateReport = () => {
-    const report = window.reduxReport.generate()
-    if (!isEqual(this.state.used, report.used)) {
-      this.setState(() => ({
-        used: report.used,
-        unused: report.unused,
-        stateCopy: report.stateCopy
-      }))
-    }
-  }
-
-  componentDidUpdate = (prevProps, prevState) => {
-    if (prevProps.computedStates.length !== this.props.computedStates.length) {
-      const report = window.reduxReport.generate()
-      this.setState(() => ({
-        used: report.used,
-        unused: report.unused,
-        stateCopy: report.stateCopy
-      }))
-    }
+    setBreakpoint: PropTypes.func.isRequired,
+    used: PropTypes.object.isRequired,
+    stateCopy: PropTypes.object.isRequired
   }
 
   isUsed(path) {
-    let used = this.state.used
+    let used = this.props.used
     for (let i = 0; i < path.length; i++) {
       used = used[path[i]]
       if (typeof used === "undefined") return false
@@ -105,20 +76,28 @@ class ReduxTree extends Component {
   }
 
   render() {
+    const { used, stateCopy, theme, currentBreakpoint } = this.props
+    const usedLength = JSON.stringify(used).length
+    const totalLength = JSON.stringify(stateCopy).length
+    const percentUsed = usedLength > 2 ? `${Math.ceil(usedLength / totalLength * 100)}%` : "N/A"
+
     return (
-      <JSONTree
-        data={this.state.stateCopy}
-        hideRoot
-        theme={this.props.theme}
-        invertTheme={false}
-        getItemString={this.getItemString}
-        valueRenderer={this.valueRenderer}
-        labelRenderer={this.labelRenderer}
-        // force re-rendering when breakpoint changes
-        currentBreakpoint={this.props.currentBreakpoint}
-        // force re-rendering when "used" report key changes
-        used={this.state.used}
-      />
+      <div>
+        <InfoContainer>Percent of store used so far: <b>{percentUsed}</b></InfoContainer>
+        <JSONTree
+          data={stateCopy}
+          hideRoot
+          theme={theme}
+          invertTheme={false}
+          getItemString={this.getItemString}
+          valueRenderer={this.valueRenderer}
+          labelRenderer={this.labelRenderer}
+          // force re-rendering when breakpoint changes
+          currentBreakpoint={currentBreakpoint}
+          // force re-rendering when "used" report key changes
+          used={used}
+        />
+      </div>
     )
   }
 }

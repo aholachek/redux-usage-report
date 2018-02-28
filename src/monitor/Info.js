@@ -34,21 +34,24 @@ const Button = styled.button`
 `
 
 const Header = styled.h3`
-  font-size: 1.5rem;
+  font-size: 1.2rem;
   margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
+  line-height: 1.3;
+  margin-bottom: 1rem;
   font-weight: bold;
 `
 
 const SpacingWrapper = styled.div`
   margin-top: 1rem;
+  margin-bottom: 1rem;
 `
 
 const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
   const removeBreakpoint = () => setBreakpoint("")
+
   return (
     <div>
-      <Header>What it shows</Header>
+      <Header>About this tool</Header>
       <div>
         <p>
           This monitor shows you a view of your Redux store based on what parts of it your code has
@@ -56,7 +59,11 @@ const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
         </p>
         <p>Values that have not been accessed are faded out.</p>
         <p>
-          To learn more, check out <a href="https://github.com/aholachek/redux-usage-report#redux-usage-report"> the README.</a>
+          To learn more, check out{" "}
+          <a href="https://github.com/aholachek/redux-usage-report#redux-usage-report">
+            {" "}
+            the README.
+          </a>
         </p>
       </div>
       <Header>Setting a breakpoint</Header>

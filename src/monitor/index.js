@@ -1,6 +1,7 @@
 import React, { Component } from "react"
 import PropTypes from "prop-types"
 import styled from "styled-components"
+import isEqual from "lodash.isequal"
 import theme from "./theme"
 import Info from "./Info"
 import ReduxTree from "./ReduxTree"
@@ -66,7 +67,38 @@ class ReduxUsageMonitor extends Component {
 
   state = {
     showInfo: false,
-    currentBreakpoint: localStorage[localStorageKey]
+    currentBreakpoint: localStorage[localStorageKey],
+    used: {},
+    stateCopy: {}
+  }
+
+  componentDidMount() {
+    this.updateReport()
+    window.reduxReport.setOnChangeCallback(this.updateReport)
+  }
+
+  componentWillUnmount() {
+    window.reduxReport.removeOnChangeCallback()
+  }
+
+  updateReport = () => {
+    const report = window.reduxReport.generate()
+    if (!isEqual(this.state.used, report.used)) {
+      this.setState(() => ({
+        used: report.used,
+        stateCopy: report.stateCopy
+      }))
+    }
+  }
+
+  componentDidUpdate = (prevProps, prevState) => {
+    if (prevProps.computedStates.length !== this.props.computedStates.length) {
+      const report = window.reduxReport.generate()
+      this.setState(() => ({
+        used: report.used,
+        stateCopy: report.stateCopy
+      }))
+    }
   }
 
   setBreakpoint = breakpointPath => {
@@ -104,14 +136,17 @@ class ReduxUsageMonitor extends Component {
               currentBreakpoint={this.state.currentBreakpoint}
               setBreakpoint={this.setBreakpoint}
               show={this.state.showInfo}
+              used={this.state.used}
+              stateCopy={this.state.stateCopy}
             />
           </div>
           <div style={{ display: this.state.showInfo ? "none" : "block" }}>
             <ReduxTree
               theme={theme}
-              computedStates={this.props.computedStates}
               currentBreakpoint={this.state.currentBreakpoint}
               setBreakpoint={this.setBreakpoint}
+              used={this.state.used}
+              stateCopy={this.state.stateCopy}
             />
           </div>
         </ContentContainer>

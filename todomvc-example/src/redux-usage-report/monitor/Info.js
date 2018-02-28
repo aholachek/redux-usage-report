@@ -9,8 +9,8 @@ var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiter
 var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
 
 var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  margin: 0 0 1rem 0;\n  padding: 0;\n  border: 0;\n  border-radius: 3px;\n  background: none;\n  font-size: 100%;\n  vertical-align: baseline;\n  font-family: inherit;\n  font-weight: inherit;\n  color: ", ";\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  -webkit-font-smoothing: antialiased;\n  background-color: ", ";\n  padding: 8px 12px;\n  font-weight: bold;\n  cursor: pointer;\n  &:hover,\n  &:focus {\n    background-color: ", ";\n  }\n"], ["\n  margin: 0 0 1rem 0;\n  padding: 0;\n  border: 0;\n  border-radius: 3px;\n  background: none;\n  font-size: 100%;\n  vertical-align: baseline;\n  font-family: inherit;\n  font-weight: inherit;\n  color: ", ";\n  -webkit-appearance: none;\n  -moz-appearance: none;\n  appearance: none;\n  -webkit-font-smoothing: antialiased;\n  background-color: ", ";\n  padding: 8px 12px;\n  font-weight: bold;\n  cursor: pointer;\n  &:hover,\n  &:focus {\n    background-color: ", ";\n  }\n"]),
-    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  font-size: 1.5rem;\n  margin-top: 1.5rem;\n  margin-bottom: 1.5rem;\n  font-weight: bold;\n"], ["\n  font-size: 1.5rem;\n  margin-top: 1.5rem;\n  margin-bottom: 1.5rem;\n  font-weight: bold;\n"]),
-    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  margin-top: 1rem;\n"], ["\n  margin-top: 1rem;\n"]);
+    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  font-size: 1.2rem;\n  margin-top: 1.5rem;\n  line-height: 1.3;\n  margin-bottom: 1rem;\n  font-weight: bold;\n"], ["\n  font-size: 1.2rem;\n  margin-top: 1.5rem;\n  line-height: 1.3;\n  margin-bottom: 1rem;\n  font-weight: bold;\n"]),
+    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  margin-top: 1rem;\n  margin-bottom: 1rem;\n"], ["\n  margin-top: 1rem;\n  margin-bottom: 1rem;\n"]);
 
 var _react = require("react");
 
@@ -52,13 +52,14 @@ var Info = function Info(_ref) {
   var removeBreakpoint = function removeBreakpoint() {
     return setBreakpoint("");
   };
+
   return _react2.default.createElement(
     "div",
     null,
     _react2.default.createElement(
       Header,
       null,
-      "What it shows"
+      "About this tool"
     ),
     _react2.default.createElement(
       "div",
@@ -76,11 +77,13 @@ var Info = function Info(_ref) {
       _react2.default.createElement(
         "p",
         null,
-        "To learn more, check out ",
+        "To learn more, check out",
+        " ",
         _react2.default.createElement(
           "a",
           { href: "https://github.com/aholachek/redux-usage-report#redux-usage-report" },
-          " the README."
+          " ",
+          "the README."
         )
       )
     ),
