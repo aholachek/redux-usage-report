@@ -7,7 +7,7 @@ This library tracks the way your app is using the data in your Redux store. By s
 If you want to know exactly when a certain value is being accessed, you can set a breakpoint to explore the call stack when the app touches that particular value.
 
 ## Demo
-[Try it out on the TodoMVC app here.](https://elite-orange.surge.sh/)
+[Try it out on the TodoMVC app here.](https://elite-orange.surge.sh/?debug_session=test)
 
 ## 1. Install the required libs
 
@@ -31,10 +31,9 @@ export default createDevTools(
     <UsageMonitor />
   </DockMonitor>
 );
-
 ```
 
-## 3. Add the `DevTools.instrument` and the `generateReduxReport` store enhancers
+## 3. Add the `generateReduxReport` and the `DevTools.instrument` store enhancers
 
 `configureStore.js`
 ```js
@@ -56,23 +55,22 @@ const store = createStore(rootReducer, initialState, enhancer)
 
 The easiest way to do this is just render the `<DevTools/>` component in your App component.
 
-[Read more about setting up redux dev tools here.](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md)
+[Read more about setting up redux devtools in the official documentation.](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md)
 
-**Make sure to [only include the devtools for your development build](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md#exclude-devtools-from-production-builds)!**
+Please make sure to [only include the devtools for your development build!](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md#exclude-devtools-from-production-builds)
 
 ## How to use it
 
-The json view of your store will show the parts that have been not accessed at least once at half opacity, as well as the total percentage of your store that has been used by your app.
+The json view of your store will show the parts that have been not accessed at reduced opacity, as well as an esimate of the total percentage of your store that has been used so far by your app.
 
 You can set a breakpoint by doing `shift + click` on any key. The next time the key is accessed, the debugger will stop execution. Feel free to reload the page, the breakpoint will persist until you remove it by holding `shift` and clicking it again.
 
 ![Setting a breakpoint](./images/breakpoint.gif)
 
-
 ## How it works
 
-The generateReduxReport enhancer wraps the store in a proxy, so that each object access can be tracked.
+The `generateReduxReport` enhancer wraps the store in a proxy, so that each object access can be tracked.
 
-It tries to be smart about ignoring object accesses that come from outside your app's code, for instance from the React devtools extension or another redux store enhancer, by not recording object access that originates in any module located in the `node_modules` folder or from any browser extension. This filtering logic only works in Chrome, or failing that, if you are using something like the [eval option](https://webpack.js.org/configuration/devtool/#development) or some other lightweight type of source map.
+It tries to be smart about ignoring object accesses that come from outside your app's code. For instance, if you're also using the `persistStore` Devtools plugin, even though that plugin accesses every key in your store, you shouldn't see that reflected in the Usage Report monitor. The monitor attempts to filter out object access that originates in any module located in the `node_modules` folder or from a browser extension. This filtering logic only works in Chrome, or failing that, if you are using something like the [eval option](https://webpack.js.org/configuration/devtool/#development) or some other lightweight type of source map that preserves file pathnames in stacktraces.
 
-If you are curious as to why a value is marked "accessed", you can always `shift + click` it in the monitor to set a breakpoint.
+If you are curious as to why a value is marked "accessed", you can always `shift + click` the relevant key in the monitor to set a breakpoint.
