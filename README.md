@@ -62,9 +62,7 @@ The easiest way to do this is just render the `<DevTools/>` component in your Ap
 
 ## How to use it
 
-The json view of your store will show the parts that have been not accessed at least once at half opacity:
-
-![view of the usage monitor](./images/view.png)
+The json view of your store will show the parts that have been not accessed at least once at half opacity, as well as the total percentage of your store that has been used by your app.
 
 You can set a breakpoint by doing `shift + click` on any key. The next time the key is accessed, the debugger will stop execution. Feel free to reload the page, the breakpoint will persist until you remove it by holding `shift` and clicking it again.
 
