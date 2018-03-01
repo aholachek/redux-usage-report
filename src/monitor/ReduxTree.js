@@ -80,7 +80,7 @@ class ReduxTree extends Component {
     const { used, stateCopy, theme, currentBreakpoint } = this.props
     const usedLength = JSON.stringify(used).length
     const totalLength = JSON.stringify(stateCopy).length
-    const percentUsed = usedLength > 2 ? `${Math.ceil(usedLength / totalLength * 100)}%` : "N/A"
+    const percentUsed = usedLength > 2 ? `${Math.round(usedLength / totalLength * 100)}%` : "N/A"
 
     return (
       <div>
