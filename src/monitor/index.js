@@ -13,18 +13,20 @@ const Container = styled.div`
   min-height: 100%;
   font-size: 16.5px;
   font-weight: normal;
-  color: ${props => props.theme.base07};
+  color: ${props => props.theme.base05};
+
+  p {
+    line-height: 1.5;
+  }
 
   a {
     color: ${props => props.theme.base0D};
-  }
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-    color: ${props => props.theme.base07};
+    font-weight: bold;
+    text-decoration: none;
+    &:hover,
+    &:focus {
+      text-decoration: underline;
+    }
   }
 `
 
@@ -36,12 +38,16 @@ const TabContainer = styled.ul`
   li {
     flex: 1;
   }
+  a {
+    font-weight: normal;
+  }
 `
 
 const Tab = styled.a`
   display: block;
   text-decoration: none !important;
   text-align: center;
+  font-weight: ${props => (props.active ? "bold" : "normal")};
   background-color: ${props => `fade-out(${props.theme.base07}, 0.9)`};
   padding: 1rem;
   color: ${props => (props.active ? `${props.theme.base07} !important` : props.theme.base0D)};
@@ -55,7 +61,7 @@ const Tab = styled.a`
 `
 
 const ContentContainer = styled.div`
-  padding: 1.5rem;
+  padding: 0 1.5rem 0 1.5rem;
 `
 
 class ReduxUsageMonitor extends Component {

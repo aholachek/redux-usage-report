@@ -28,10 +28,10 @@ var _taggedTemplateLiteral2 = require("babel-runtime/helpers/taggedTemplateLiter
 
 var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
 
-var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  background-color: ", ";\n  min-height: 100%;\n  font-size: 16.5px;\n  font-weight: normal;\n  color: ", ";\n\n  a {\n    color: ", ";\n  }\n  h1,\n  h2,\n  h3,\n  h4,\n  h5,\n  h6 {\n    color: ", ";\n  }\n"], ["\n  background-color: ", ";\n  min-height: 100%;\n  font-size: 16.5px;\n  font-weight: normal;\n  color: ", ";\n\n  a {\n    color: ", ";\n  }\n  h1,\n  h2,\n  h3,\n  h4,\n  h5,\n  h6 {\n    color: ", ";\n  }\n"]),
-    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  display: flex;\n  padding: 0;\n  margin: 0;\n  list-style: none;\n  li {\n    flex: 1;\n  }\n"], ["\n  display: flex;\n  padding: 0;\n  margin: 0;\n  list-style: none;\n  li {\n    flex: 1;\n  }\n"]),
-    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  display: block;\n  text-decoration: none !important;\n  text-align: center;\n  background-color: ", ";\n  padding: 1rem;\n  color: ", ";\n  border-bottom: 3px solid transparent;\n  border-color: ", ";\n  background-color: ", ";\n  &:hover {\n    background-color: ", ";\n  }\n"], ["\n  display: block;\n  text-decoration: none !important;\n  text-align: center;\n  background-color: ", ";\n  padding: 1rem;\n  color: ", ";\n  border-bottom: 3px solid transparent;\n  border-color: ", ";\n  background-color: ", ";\n  &:hover {\n    background-color: ", ";\n  }\n"]),
-    _templateObject4 = (0, _taggedTemplateLiteral3.default)(["\n  padding: 1.5rem;\n"], ["\n  padding: 1.5rem;\n"]);
+var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  background-color: ", ";\n  min-height: 100%;\n  font-size: 16.5px;\n  font-weight: normal;\n  color: ", ";\n\n  p {\n    line-height: 1.5;\n  }\n\n  a {\n    color: ", ";\n    font-weight: bold;\n    text-decoration: none;\n    &:hover,\n    &:focus {\n      text-decoration: underline;\n    }\n  }\n"], ["\n  background-color: ", ";\n  min-height: 100%;\n  font-size: 16.5px;\n  font-weight: normal;\n  color: ", ";\n\n  p {\n    line-height: 1.5;\n  }\n\n  a {\n    color: ", ";\n    font-weight: bold;\n    text-decoration: none;\n    &:hover,\n    &:focus {\n      text-decoration: underline;\n    }\n  }\n"]),
+    _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  display: flex;\n  padding: 0;\n  margin: 0;\n  list-style: none;\n  li {\n    flex: 1;\n  }\n  a {\n    font-weight: normal;\n  }\n"], ["\n  display: flex;\n  padding: 0;\n  margin: 0;\n  list-style: none;\n  li {\n    flex: 1;\n  }\n  a {\n    font-weight: normal;\n  }\n"]),
+    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  display: block;\n  text-decoration: none !important;\n  text-align: center;\n  font-weight: ", ";\n  background-color: ", ";\n  padding: 1rem;\n  color: ", ";\n  border-bottom: 3px solid transparent;\n  border-color: ", ";\n  background-color: ", ";\n  &:hover {\n    background-color: ", ";\n  }\n"], ["\n  display: block;\n  text-decoration: none !important;\n  text-align: center;\n  font-weight: ", ";\n  background-color: ", ";\n  padding: 1rem;\n  color: ", ";\n  border-bottom: 3px solid transparent;\n  border-color: ", ";\n  background-color: ", ";\n  &:hover {\n    background-color: ", ";\n  }\n"]),
+    _templateObject4 = (0, _taggedTemplateLiteral3.default)(["\n  padding: 0 1.5rem 0 1.5rem;\n"], ["\n  padding: 0 1.5rem 0 1.5rem;\n"]);
 
 var _react = require("react");
 
@@ -68,16 +68,16 @@ var localStorageKey = "reduxUsageReportBreakpoints";
 var Container = _styledComponents2.default.div(_templateObject, function (props) {
   return props.theme.base00;
 }, function (props) {
-  return props.theme.base07;
+  return props.theme.base05;
 }, function (props) {
   return props.theme.base0D;
-}, function (props) {
-  return props.theme.base07;
 });
 
 var TabContainer = _styledComponents2.default.ul(_templateObject2);
 
 var Tab = _styledComponents2.default.a(_templateObject3, function (props) {
+  return props.active ? "bold" : "normal";
+}, function (props) {
   return "fade-out(" + props.theme.base07 + ", 0.9)";
 }, function (props) {
   return props.active ? props.theme.base07 + " !important" : props.theme.base0D;

@@ -34,7 +34,7 @@ var _taggedTemplateLiteral3 = _interopRequireDefault(_taggedTemplateLiteral2);
 
 var _templateObject = (0, _taggedTemplateLiteral3.default)(["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"], ["\n  opacity: ", ";\n  font-size: 16.5px;\n  line-height: 1.4;\n"]),
     _templateObject2 = (0, _taggedTemplateLiteral3.default)(["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"], ["\n  position: relative;\n  color: ", ";\n  font-weight: ", ";\n  cursor: pointer;\n"]),
-    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  margin-bottom: 1rem;\n"], ["\n  margin-bottom: 1rem;\n"]);
+    _templateObject3 = (0, _taggedTemplateLiteral3.default)(["\n  margin-top: 1.5rem;\n  margin-bottom: 1rem;\n"], ["\n  margin-top: 1.5rem;\n  margin-bottom: 1rem;\n"]);
 
 var _react = require("react");
 
@@ -112,10 +112,10 @@ var ReduxTree = function (_Component) {
         _react2.default.createElement(
           InfoContainer,
           null,
-          "Percent of store used so far: ",
+          "Percentage used: ",
           _react2.default.createElement(
-            "b",
-            null,
+            "span",
+            { style: { color: theme.base0D } },
             percentUsed
           )
         ),

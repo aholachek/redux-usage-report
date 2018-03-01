@@ -17,6 +17,7 @@ const KeySpan = FadeSpan.extend`
 `
 
 const InfoContainer = styled.div`
+  margin-top: 1.5rem;
   margin-bottom: 1rem;
 `
 
@@ -83,7 +84,9 @@ class ReduxTree extends Component {
 
     return (
       <div>
-        <InfoContainer>Percent of store used so far: <b>{percentUsed}</b></InfoContainer>
+        <InfoContainer>
+          Percentage used: <span style={{ color: theme.base0D }}>{percentUsed}</span>
+        </InfoContainer>
         <JSONTree
           data={stateCopy}
           hideRoot
