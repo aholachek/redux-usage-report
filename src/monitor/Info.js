@@ -52,7 +52,7 @@ const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
 
   return (
     <div>
-      <Header>About this tool</Header>
+      <Header theme={theme}>About this tool</Header>
       <div>
         <p>
           This monitor shows you a view of your Redux store based on what parts of it your code has
@@ -63,7 +63,7 @@ const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
           </a>
         </p>
       </div>
-      <Header>Setting a breakpoint</Header>
+      <Header theme={theme}>Setting a breakpoint</Header>
       <div>
         {!!currentBreakpoint && (
           <div>

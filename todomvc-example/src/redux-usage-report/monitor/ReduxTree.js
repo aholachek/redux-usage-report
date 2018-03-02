@@ -104,7 +104,7 @@ var ReduxTree = function (_Component) {
 
       var usedLength = (0, _stringify2.default)(used).length;
       var totalLength = (0, _stringify2.default)(stateCopy).length;
-      var percentUsed = usedLength > 2 ? Math.ceil(usedLength / totalLength * 100) + "%" : "N/A";
+      var percentUsed = usedLength > 2 ? Math.round(usedLength / totalLength * 100) + "%" : "N/A";
 
       return _react2.default.createElement(
         "div",
