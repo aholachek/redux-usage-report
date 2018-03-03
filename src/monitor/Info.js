@@ -69,7 +69,7 @@ const Info = ({ currentBreakpoint, setBreakpoint, theme }) => {
           <div>
             There is currently a breakpoint set at{" "}
             <SpacingWrapper>
-              <pre>
+              <pre style={{ maxWidth: "100%", overflowY: "scroll" }}>
                 <code>{currentBreakpoint}</code>
               </pre>
             </SpacingWrapper>
