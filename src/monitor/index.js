@@ -10,7 +10,12 @@ const localStorageKey = "reduxUsageReportBreakpoints"
 
 const Container = styled.div`
   background-color: ${props => props.theme.base00};
-  min-height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow-y: auto;
   font-size: 16.5px;
   font-weight: normal;
   color: ${props => props.theme.base05};

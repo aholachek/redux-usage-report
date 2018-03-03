@@ -112,7 +112,7 @@ var ReduxTree = function (_Component) {
         _react2.default.createElement(
           InfoContainer,
           null,
-          "Percentage used: ",
+          "Estimated percentage used: ",
           _react2.default.createElement(
             "span",
             { style: { color: theme.base0D } },

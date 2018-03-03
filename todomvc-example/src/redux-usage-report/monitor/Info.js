@@ -60,7 +60,7 @@ var Info = function Info(_ref) {
     null,
     _react2.default.createElement(
       Header,
-      null,
+      { theme: theme },
       "About this tool"
     ),
     _react2.default.createElement(
@@ -80,7 +80,7 @@ var Info = function Info(_ref) {
     ),
     _react2.default.createElement(
       Header,
-      null,
+      { theme: theme },
       "Setting a breakpoint"
     ),
     _react2.default.createElement(

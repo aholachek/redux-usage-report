@@ -85,7 +85,7 @@ class ReduxTree extends Component {
     return (
       <div>
         <InfoContainer>
-          Percentage used: <span style={{ color: theme.base0D }}>{percentUsed}</span>
+          Estimated percentage used: <span style={{ color: theme.base0D }}>{percentUsed}</span>
         </InfoContainer>
         <JSONTree
           data={stateCopy}
