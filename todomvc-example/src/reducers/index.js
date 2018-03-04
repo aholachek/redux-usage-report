@@ -1,9 +1,10 @@
 import { combineReducers } from "redux"
 import todos from "./todos"
+import unused from "./unused"
 
 const rootReducer = combineReducers({
   todos,
-  unused: () => ["here", "is", "some", "unused", "data"]
+  unused
 })
 
 export default rootReducer

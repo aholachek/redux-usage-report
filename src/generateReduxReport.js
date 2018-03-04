@@ -56,7 +56,7 @@ function generateReduxReport(global, rootReducer) {
     accessedState: {},
     state: {},
     setOnChangeCallback(cb) {
-      global.reduxReport.onChangeCallback = debounce(cb, 25)
+      global.reduxReport.onChangeCallback = debounce(cb, 10)
     },
     removeOnChangeCallback() {
       global.reduxReport.onChangeCallback = undefined
@@ -99,17 +99,24 @@ function generateReduxReport(global, rootReducer) {
 
     const usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === "number"
 
+    const callChangeListener = () => {
+      if (global.reduxReport.onChangeCallback)
+        setTimeout(() => global.reduxReport.onChangeCallback(""), 1)
+    }
+
     if (usingReduxDevTools) {
       state.computedStates[state.currentStateIndex].state = makeProxy(
         state.computedStates[state.currentStateIndex].state
       )
       global.reduxReport.__reducerInProgress = false
       global.reduxReport.state = state.computedStates[state.currentStateIndex].state
+      callChangeListener()
       return state
     } else {
       const proxiedState = makeProxy(state)
       global.reduxReport.__reducerInProgress = false
       global.reduxReport.state = proxiedState
+      callChangeListener()
       return proxiedState
     }
   }

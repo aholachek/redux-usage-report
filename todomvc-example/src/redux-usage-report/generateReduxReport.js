@@ -59,11 +59,6 @@ var globalObjectCache = void 0;
 var shouldSkipProxy = function shouldSkipProxy() {
   if (global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) return true;
 
-  // this is kind of hacky, but webpack dev server serves non-local files
-  // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
-  // whereas local files look like this: webpack:///./containers/TodoApp.js
-  // also trying to avoid functions emanating from browser extensions
-
   var stackFrames = _stacktraceJs2.default.getSync();
   var initiatingFunc = stackFrames[stackFrames.findIndex(function (s) {
     return s.functionName === "Object.get";
@@ -82,7 +77,7 @@ function generateReduxReport(global, rootReducer) {
     accessedState: {},
     state: {},
     setOnChangeCallback: function setOnChangeCallback(cb) {
-      global.reduxReport.onChangeCallback = (0, _lodash2.default)(cb, 25);
+      global.reduxReport.onChangeCallback = (0, _lodash2.default)(cb, 10);
     },
     removeOnChangeCallback: function removeOnChangeCallback() {
       global.reduxReport.onChangeCallback = undefined;
@@ -129,15 +124,23 @@ function generateReduxReport(global, rootReducer) {
 
     var usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === "number";
 
+    var callChangeListener = function callChangeListener() {
+      if (global.reduxReport.onChangeCallback) setTimeout(function () {
+        return global.reduxReport.onChangeCallback("");
+      }, 1);
+    };
+
     if (usingReduxDevTools) {
       state.computedStates[state.currentStateIndex].state = makeProxy(state.computedStates[state.currentStateIndex].state);
       global.reduxReport.__reducerInProgress = false;
       global.reduxReport.state = state.computedStates[state.currentStateIndex].state;
+      callChangeListener();
       return state;
     } else {
       var proxiedState = makeProxy(state);
       global.reduxReport.__reducerInProgress = false;
       global.reduxReport.state = proxiedState;
+      callChangeListener();
       return proxiedState;
     }
   };
