@@ -74,3 +74,6 @@ The `generateReduxReport` enhancer wraps the store in a proxy, so that each obje
 It tries to be smart about ignoring object accesses that come from outside your app's code. For instance, if you're also using the `persistStore` Devtools plugin, even though that plugin accesses every key in your store, you shouldn't see that reflected in the Usage Report monitor. The monitor attempts to filter out object access that originates in any module located in the `node_modules` folder or from a browser extension. This filtering logic only works in Chrome, or failing that, if you are using something like the [eval option](https://webpack.js.org/configuration/devtool/#development) or some other lightweight type of source map that preserves file pathnames in stacktraces.
 
 If you are curious as to why a value is marked "accessed", you can always `shift + click` the relevant key in the monitor to set a breakpoint.
+
+## Performance
+As you might expect there's a performance cost to proxying object access, mostly due to checking the stack trace to see if the object access can be ignored because it originates from `node_modules`. It should not be noticable in most cases.

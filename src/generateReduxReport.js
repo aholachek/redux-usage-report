@@ -35,11 +35,6 @@ let globalObjectCache
 const shouldSkipProxy = () => {
   if (global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) return true
 
-  // this is kind of hacky, but webpack dev server serves non-local files
-  // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
-  // whereas local files look like this: webpack:///./containers/TodoApp.js
-  // also trying to avoid functions emanating from browser extensions
-
   const stackFrames = StackTrace.getSync()
   const initiatingFunc =
     stackFrames[stackFrames.findIndex(s => s.functionName === "Object.get") + 1]

@@ -3,28 +3,28 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.createMakeProxyFunction = undefined;
-
-var _stringify = require("babel-runtime/core-js/json/stringify");
-
-var _stringify2 = _interopRequireDefault(_stringify);
-
+exports.createMakeProxyFunction = exports.getChildObject = exports.UNPROXIED_OBJ_KEY = undefined;
 exports.default = trackObjectUse;
 
 var _utility = require("./utility");
 
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-var UNPROXIED_OBJ_KEY = "__initialValue";
+var UNPROXIED_OBJ_KEY = exports.UNPROXIED_OBJ_KEY = "**__GET_INITIAL_PROXY_VAL__**";
 
 var getUnproxiedObject = function getUnproxiedObject(target) {
   return target[UNPROXIED_OBJ_KEY] !== undefined ? target[UNPROXIED_OBJ_KEY] : target;
 };
 
+var getChildObject = exports.getChildObject = function getChildObject(obj, stateLocation) {
+  if (!stateLocation) return obj;
+  return stateLocation.split(".").reduce(function (acc, key) {
+    return acc[key];
+  }, obj);
+};
+
 var createMakeProxyFunction = exports.createMakeProxyFunction = function createMakeProxyFunction(_ref) {
-  var _ref$keepOriginalValu = _ref.keepOriginalValues,
+  var accessedProperties = _ref.accessedProperties,
+      _ref$keepOriginalValu = _ref.keepOriginalValues,
       keepOriginalValues = _ref$keepOriginalValu === undefined ? false : _ref$keepOriginalValu,
-      accessedProperties = _ref.accessedProperties,
       _ref$shouldSkipProxy = _ref.shouldSkipProxy,
       shouldSkipProxy = _ref$shouldSkipProxy === undefined ? function () {
     return false;
@@ -39,17 +39,12 @@ var createMakeProxyFunction = exports.createMakeProxyFunction = function createM
 
     var handler = {
       get: function get(target, propKey) {
-        // need to be able to actually get the value without triggering another get cycle
         if (propKey === UNPROXIED_OBJ_KEY) return target;
         var value = target[propKey];
 
         if (!Object.hasOwnProperty.call(target, propKey)) return value;
 
-        if (shouldSkipProxy()) return JSON.parse((0, _stringify2.default)(value));
-
-        var accessedPropertiesPointer = !stateLocation ? accessedProperties : stateLocation.split(".").reduce(function (acc, key) {
-          return acc[key];
-        }, accessedProperties);
+        if (shouldSkipProxy()) return value;
 
         var newStateLocation = stateLocation ? stateLocation + "." + propKey : propKey;
 
@@ -58,6 +53,9 @@ var createMakeProxyFunction = exports.createMakeProxyFunction = function createM
           // explore the callstack to see when your app accesses a value
           debugger;
         }
+
+        var accessedPropertiesPointer = getChildObject(accessedProperties, stateLocation);
+
         if ((0, _utility.isObjectOrArray)(value)) {
           if ((0, _utility.isUndefined)(accessedPropertiesPointer[propKey])) {
             accessedPropertiesPointer[propKey] = Array.isArray(value) ? [] : {};

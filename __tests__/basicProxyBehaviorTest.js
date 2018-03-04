@@ -1,5 +1,3 @@
-import { createMakeProxyFunction } from "../src/trackObjectUse"
-
 describe("basic proxy behavior", () => {
   it("if a proxied object is proxied again, both proxies will be active, rather than the second proxy simply overriding the first", () => {
     const handler1 = {
@@ -18,6 +16,7 @@ describe("basic proxy behavior", () => {
     expect(proxy.test).toBe("proxied get")
     expect(wrappedProxy.test).toBe("proxied get is wrapped with an outer proxy")
   })
+
   it("there can be a special hidden key that just returns the unproxied target to avoid this proxy nesting", () => {
     const handler1 = {
       get(target, propKey) {
@@ -40,10 +39,10 @@ describe("basic proxy behavior", () => {
     expect(proxy.__initialVal.test).toBe(1)
     expect(wrappedProxy.test).toBe("1 is wrapped with an outer proxy")
   })
+
   it("JSON.parse(JSON.stringify(obj)) will return a non-proxied object from a proxied object, after calling the proxy's get methods", () => {
     const handler1 = {
       get: jest.fn(function(target, propKey) {
-        debugger
         return "proxied get"
       })
     }

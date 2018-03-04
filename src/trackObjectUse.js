@@ -1,13 +1,20 @@
 import { isObjectOrArray, isUndefined } from "./utility"
 
-const UNPROXIED_OBJ_KEY = "__initialValue"
+export const UNPROXIED_OBJ_KEY = "**__GET_INITIAL_PROXY_VAL__**"
 
 const getUnproxiedObject = target =>
   target[UNPROXIED_OBJ_KEY] !== undefined ? target[UNPROXIED_OBJ_KEY] : target
 
+export const getChildObject = (obj, stateLocation) => {
+  if (!stateLocation) return obj
+  return stateLocation.split(".").reduce((acc, key) => {
+    return acc[key]
+  }, obj)
+}
+
 export const createMakeProxyFunction = ({
-  keepOriginalValues = false,
   accessedProperties,
+  keepOriginalValues = false,
   shouldSkipProxy = () => false,
   getBreakpoint = () => {},
   onChange = () => {}
@@ -15,19 +22,12 @@ export const createMakeProxyFunction = ({
   return function makeProxy(obj, stateLocation = "") {
     const handler = {
       get(target, propKey) {
-        // need to be able to actually get the value without triggering another get cycle
         if (propKey === UNPROXIED_OBJ_KEY) return target
         const value = target[propKey]
 
         if (!Object.hasOwnProperty.call(target, propKey)) return value
 
-        if (shouldSkipProxy()) return JSON.parse(JSON.stringify(value))
-
-        const accessedPropertiesPointer = !stateLocation
-          ? accessedProperties
-          : stateLocation.split(".").reduce((acc, key) => {
-              return acc[key]
-            }, accessedProperties)
+        if (shouldSkipProxy()) return value
 
         const newStateLocation = stateLocation ? stateLocation + "." + propKey : propKey
 
@@ -36,6 +36,9 @@ export const createMakeProxyFunction = ({
           // explore the callstack to see when your app accesses a value
           debugger
         }
+
+        const accessedPropertiesPointer = getChildObject(accessedProperties, stateLocation)
+
         if (isObjectOrArray(value)) {
           if (isUndefined(accessedPropertiesPointer[propKey])) {
             accessedPropertiesPointer[propKey] = Array.isArray(value) ? [] : {}

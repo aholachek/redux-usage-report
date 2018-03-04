@@ -16,7 +16,7 @@ const Container = styled.div`
   right: 0;
   bottom: 0;
   overflow-y: auto;
-  font-size: 16.5px;
+  font-size: 16px;
   font-weight: normal;
   color: ${props => props.theme.base05};
 

@@ -43,8 +43,6 @@ describe('generateReduxReport', () => {
     const val3 = store.getState().a.d
     const val4 = store.getState().g[2].j
 
-    debugger
-
     const expectedUsed = {
       a: {
         b: {
