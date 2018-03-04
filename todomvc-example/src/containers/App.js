@@ -11,7 +11,7 @@ const App = ({ todos, actions }) => (
   <div>
     <div style={{ padding: '1rem'}}>
       <button onClick={actions.augmentUnused}>
-        Click here to update the "unused" part of redux array for demonstration purposes
+        Click here to update the "unused" part of the store
       </button>
     </div>
     <Header addTodo={actions.addTodo} />
