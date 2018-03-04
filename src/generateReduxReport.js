@@ -35,18 +35,19 @@ let globalObjectCache
 const shouldSkipProxy = () => {
   if (global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) return true
 
-  const stackFrames = StackTrace.getSync()
-  const initiatingFunc =
-    stackFrames[stackFrames.findIndex(s => s.functionName === "Object.get") + 1]
+  if (!global.reduxReport.__skipAccessOriginCheck) {
+    const stackFrames = StackTrace.getSync()
+    const initiatingFunc =
+      stackFrames[stackFrames.findIndex(s => s.functionName === "Object.get") + 1]
 
-  const initiatingFuncNotLocal =
-    !!initiatingFunc &&
-    initiatingFunc.fileName &&
-    (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) ||
-      initiatingFunc.fileName.match(/extension:\/\//))
+    const initiatingFuncNotLocal =
+      !!initiatingFunc &&
+      initiatingFunc.fileName &&
+      (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) ||
+        initiatingFunc.fileName.match(/extension:\/\//))
 
-  if (!!initiatingFuncNotLocal) return true
-
+    if (!!initiatingFuncNotLocal) return true
+  }
   return false
 }
 

@@ -76,4 +76,4 @@ It tries to be smart about ignoring object accesses that come from outside your 
 If you are curious as to why a value is marked "accessed", you can always `shift + click` the relevant key in the monitor to set a breakpoint.
 
 ## Performance
-As you might expect there's a performance cost to proxying object access, mostly due to checking the stack trace to see if the object access can be ignored because it originates from `node_modules`. It should not be noticable in most cases.
+If you notice any performance issues, you can speed things up by turn off the most expensive check (whether to ignore access that originates from `node_modules`) by typing `reduxReport.__skipAccessOriginCheck = true` in the developer console.

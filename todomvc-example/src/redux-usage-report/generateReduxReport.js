@@ -59,15 +59,16 @@ var globalObjectCache = void 0;
 var shouldSkipProxy = function shouldSkipProxy() {
   if (global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) return true;
 
-  var stackFrames = _stacktraceJs2.default.getSync();
-  var initiatingFunc = stackFrames[stackFrames.findIndex(function (s) {
-    return s.functionName === "Object.get";
-  }) + 1];
+  if (!global.reduxReport.__skipAccessOriginCheck) {
+    var stackFrames = _stacktraceJs2.default.getSync();
+    var initiatingFunc = stackFrames[stackFrames.findIndex(function (s) {
+      return s.functionName === "Object.get";
+    }) + 1];
 
-  var initiatingFuncNotLocal = !!initiatingFunc && initiatingFunc.fileName && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
+    var initiatingFuncNotLocal = !!initiatingFunc && initiatingFunc.fileName && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
 
-  if (!!initiatingFuncNotLocal) return true;
-
+    if (!!initiatingFuncNotLocal) return true;
+  }
   return false;
 };
 
