@@ -76,4 +76,7 @@ It tries to be smart about ignoring object accesses that come from outside your 
 If you are curious as to why a value is marked "accessed", you can always `shift + click` the relevant key in the monitor to set a breakpoint.
 
 ## Performance
-If you notice any performance issues, you can speed things up by turn off the most expensive check (whether to ignore access that originates from `node_modules`) by typing `reduxReport.__skipAccessOriginCheck = true` in the developer console.
+If you notice any performance issues, you can speed things up by turning off the most expensive check (whether to ignore object access that originates from `node_modules`) by typing in the console:
+ ```
+ reduxReport.__skipAccessOriginCheck = true
+ ```
