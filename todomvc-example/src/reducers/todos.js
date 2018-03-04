@@ -14,8 +14,7 @@ const initialState = [
     id: 0,
     someExtraData: {
       thisObj: "isUnused",
-      thisObj2: 'isAccessedWhenCompletedIsToggled'
-
+      thisObj2: "isAccessedWhenCompletedIsToggled"
     }
   },
   {
@@ -23,8 +22,7 @@ const initialState = [
     completed: false,
     someExtraData: {
       thisObj: "isUnused",
-      thisObj2: 'isAccessedWhenCompletedIsToggled'
-
+      thisObj2: "isAccessedWhenCompletedIsToggled"
     },
     id: 1
   },
@@ -33,7 +31,7 @@ const initialState = [
     completed: false,
     someExtraData: {
       thisObj: "isUnused",
-      thisObj2: 'isAccessedWhenCompletedIsToggled'
+      thisObj2: "isAccessedWhenCompletedIsToggled"
     },
     id: 3
   }
@@ -52,9 +50,10 @@ export default function todos(state = initialState, action) {
             a: Math.random().toFixed(3),
             b: Math.random().toFixed(4)
           },
-          thisValueIsntAccessed: "foo",
-          thisObj2: 'isAccessedWhenCompletedIsToggled'
-
+          someExtraData: {
+            thisObj: "isUnused",
+            thisObj2: "isAccessedWhenCompletedIsToggled"
+          }
         }
       ]
 

@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _stringify = require("babel-runtime/core-js/json/stringify");
+
+var _stringify2 = _interopRequireDefault(_stringify);
+
 var _keys = require("babel-runtime/core-js/object/keys");
 
 var _keys2 = _interopRequireDefault(_keys);
@@ -18,15 +22,9 @@ var _utility = require("./utility");
 
 var _trackObjectUse = require("./trackObjectUse");
 
-var _lodash = require("lodash.clone");
+var _lodash = require("lodash.debounce");
 
 var _lodash2 = _interopRequireDefault(_lodash);
-
-var _lodash3 = require("lodash.throttle");
-
-var _lodash4 = _interopRequireDefault(_lodash3);
-
-require("./lib/browser-source-map-support");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -36,8 +34,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // this takes the stack trace file name from e.g.  fileName: "http://localhost:3001/static/js/bundle.js",
 // to "http://localhost:3000/Users/alexholachek/Desktop/work/redux-usage-report/todomvc-example/src/containers/App.js
 // this raises an error during jest tests so limit to development
-//
 if (process.env.NODE_ENV === "development") {
+  require("./lib/browser-source-map-support");
   sourceMapSupport.install(); // eslint-disable-line
 }
 
@@ -58,7 +56,9 @@ function replaceUndefinedWithNull(obj) {
 
 var globalObjectCache = void 0;
 
-var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
+var shouldSkipProxy = function shouldSkipProxy() {
+  if (global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) return true;
+
   // this is kind of hacky, but webpack dev server serves non-local files
   // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
   // whereas local files look like this: webpack:///./containers/TodoApp.js
@@ -69,11 +69,10 @@ var shouldSkipProxy = function shouldSkipProxy(target, propKey) {
     return s.functionName === "Object.get";
   }) + 1];
 
-  var initiatingFuncNotLocal = !!initiatingFunc && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
+  var initiatingFuncNotLocal = !!initiatingFunc && initiatingFunc.fileName && (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) || initiatingFunc.fileName.match(/extension:\/\//));
 
-  if (!!initiatingFuncNotLocal || !target.hasOwnProperty(propKey) || global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) {
-    return true;
-  }
+  if (!!initiatingFuncNotLocal) return true;
+
   return false;
 };
 
@@ -83,7 +82,7 @@ function generateReduxReport(global, rootReducer) {
     accessedState: {},
     state: {},
     setOnChangeCallback: function setOnChangeCallback(cb) {
-      global.reduxReport.onChangeCallback = (0, _lodash4.default)(cb, 1000);
+      global.reduxReport.onChangeCallback = (0, _lodash2.default)(cb, 25);
     },
     removeOnChangeCallback: function removeOnChangeCallback() {
       global.reduxReport.onChangeCallback = undefined;
@@ -99,8 +98,8 @@ function generateReduxReport(global, rootReducer) {
     },
     generate: function generate() {
       global.reduxReport.__inProgress = true;
-      var used = (0, _lodash2.default)(this.accessedState);
-      var stateCopy = (0, _lodash2.default)(this.state);
+      var used = JSON.parse((0, _stringify2.default)(this.accessedState));
+      var stateCopy = JSON.parse((0, _stringify2.default)(this.state));
       var unused = (0, _deepObjectDiff.diff)(stateCopy, used);
       replaceUndefinedWithNull(unused);
       var report = {
@@ -119,10 +118,8 @@ function generateReduxReport(global, rootReducer) {
     getBreakpoint: function getBreakpoint() {
       return global.localStorage && global.localStorage.getItem(localStorageKey);
     },
-    onChange: function onChange() {
-      var _global$reduxReport;
-
-      return global.reduxReport.onChangeCallback && (_global$reduxReport = global.reduxReport).onChangeCallback.apply(_global$reduxReport, arguments);
+    onChange: function onChange(stateLocation) {
+      return global.reduxReport.onChangeCallback && global.reduxReport.onChangeCallback(stateLocation);
     }
   });
 

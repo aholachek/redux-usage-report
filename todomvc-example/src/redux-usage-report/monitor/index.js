@@ -112,24 +112,11 @@ var ReduxUsageMonitor = function (_Component) {
       stateCopy: {}
     }, _this.updateReport = function () {
       var report = window.reduxReport.generate();
-      if (!(0, _lodash2.default)(_this.state.used, report.used)) {
-        _this.setState(function () {
-          return {
-            used: report.used,
-            stateCopy: report.stateCopy
-          };
-        });
-      }
-    }, _this.componentDidUpdate = function (prevProps, prevState) {
-      if (prevProps.computedStates.length !== _this.props.computedStates.length) {
-        var report = window.reduxReport.generate();
-        _this.setState(function () {
-          return {
-            used: report.used,
-            stateCopy: report.stateCopy
-          };
-        });
-      }
+      if ((0, _lodash2.default)(report.used, _this.state.used) && (0, _lodash2.default)(report.stateCopy, _this.state.stateCopy)) return;
+      _this.setState({
+        used: report.used,
+        stateCopy: report.stateCopy
+      });
     }, _this.setBreakpoint = function (breakpointPath) {
       window.reduxReport.setBreakpoint(breakpointPath);
       _this.setState({ currentBreakpoint: breakpointPath });
@@ -144,7 +131,8 @@ var ReduxUsageMonitor = function (_Component) {
     key: "componentDidMount",
     value: function componentDidMount() {
       this.updateReport();
-      window.reduxReport.setOnChangeCallback(this.updateReport);
+      // not sure why this bind is necessary
+      window.reduxReport.setOnChangeCallback(this.updateReport.bind(this));
     }
   }, {
     key: "componentWillUnmount",

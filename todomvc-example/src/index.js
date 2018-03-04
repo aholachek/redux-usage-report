@@ -10,7 +10,6 @@ import "todomvc-app-css/index.css"
 import generateReduxReport from "./redux-usage-report"
 import DevTools from "./containers/DevTools"
 
-debugger
 const enhancer = compose(
   DevTools.instrument(),
   generateReduxReport(),

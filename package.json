@@ -4,7 +4,7 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "test": "jest",
+    "test": "NODE_ENV=test jest",
     "build": "NODE_ENV=production ./node_modules/.bin/babel src -d dist --ignore node_modules,src/lib; cp -r src/lib dist/",
     "prepublish": "npm run build"
   },
@@ -14,9 +14,8 @@
     "deep-object-diff": "^1.0.4",
     "fs": "^0.0.1-security",
     "install": "^0.10.4",
-    "lodash.clone": "^4.5.0",
+    "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
-    "lodash.throttle": "^4.1.1",
     "prop-types": "^15.6.0",
     "react": "^16.2.0",
     "react-json-tree": "^0.11.0",

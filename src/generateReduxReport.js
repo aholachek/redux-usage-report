@@ -2,9 +2,7 @@ import { diff } from "deep-object-diff"
 import StackTrace from "stacktrace-js"
 import { isObjectOrArray } from "./utility"
 import { createMakeProxyFunction } from "./trackObjectUse"
-import cloneDeep from "lodash.clone"
-import throttle from "lodash.throttle"
-import "./lib/browser-source-map-support"
+import debounce from "lodash.debounce"
 
 // we need source maps for the stack traces
 // or else we won't know whether to ignore object access
@@ -12,8 +10,8 @@ import "./lib/browser-source-map-support"
 // this takes the stack trace file name from e.g.  fileName: "http://localhost:3001/static/js/bundle.js",
 // to "http://localhost:3000/Users/alexholachek/Desktop/work/redux-usage-report/todomvc-example/src/containers/App.js
 // this raises an error during jest tests so limit to development
-//
 if (process.env.NODE_ENV === "development") {
+  require("./lib/browser-source-map-support")
   sourceMapSupport.install() // eslint-disable-line
 }
 
@@ -34,7 +32,9 @@ function replaceUndefinedWithNull(obj) {
 
 let globalObjectCache
 
-const shouldSkipProxy = (target, propKey) => {
+const shouldSkipProxy = () => {
+  if (global.reduxReport.__inProgress || global.reduxReport.__reducerInProgress) return true
+
   // this is kind of hacky, but webpack dev server serves non-local files
   // that look like this: `webpack:///./~/react-redux/lib/components/connect.js `
   // whereas local files look like this: webpack:///./containers/TodoApp.js
@@ -46,17 +46,12 @@ const shouldSkipProxy = (target, propKey) => {
 
   const initiatingFuncNotLocal =
     !!initiatingFunc &&
+    initiatingFunc.fileName &&
     (initiatingFunc.fileName.match(/\.\/~\/|\/node_modules\//) ||
       initiatingFunc.fileName.match(/extension:\/\//))
 
-  if (
-    !!initiatingFuncNotLocal ||
-    !target.hasOwnProperty(propKey) ||
-    global.reduxReport.__inProgress ||
-    global.reduxReport.__reducerInProgress
-  ) {
-    return true
-  }
+  if (!!initiatingFuncNotLocal) return true
+
   return false
 }
 
@@ -66,7 +61,7 @@ function generateReduxReport(global, rootReducer) {
     accessedState: {},
     state: {},
     setOnChangeCallback(cb) {
-      global.reduxReport.onChangeCallback = throttle(cb, 1000)
+      global.reduxReport.onChangeCallback = debounce(cb, 25)
     },
     removeOnChangeCallback() {
       global.reduxReport.onChangeCallback = undefined
@@ -81,8 +76,8 @@ function generateReduxReport(global, rootReducer) {
     },
     generate() {
       global.reduxReport.__inProgress = true
-      const used = cloneDeep(this.accessedState)
-      const stateCopy = cloneDeep(this.state)
+      const used = JSON.parse(JSON.stringify(this.accessedState))
+      const stateCopy = JSON.parse(JSON.stringify(this.state))
       const unused = diff(stateCopy, used)
       replaceUndefinedWithNull(unused)
       const report = {
@@ -99,7 +94,8 @@ function generateReduxReport(global, rootReducer) {
     shouldSkipProxy,
     accessedProperties: global.reduxReport.accessedState,
     getBreakpoint: () => global.localStorage && global.localStorage.getItem(localStorageKey),
-    onChange: (...args) => global.reduxReport.onChangeCallback && global.reduxReport.onChangeCallback(...args)
+    onChange: stateLocation =>
+      global.reduxReport.onChangeCallback && global.reduxReport.onChangeCallback(stateLocation)
   })
 
   return (prevState, action) => {

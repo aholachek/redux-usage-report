@@ -30,7 +30,6 @@ export default class TodoItem extends Component {
 
   render() {
     const { todo, completeTodo, deleteTodo } = this.props
-
     let element
     if (this.state.editing) {
       element = (
@@ -48,7 +47,7 @@ export default class TodoItem extends Component {
             type="checkbox"
             checked={todo.completed}
             onChange={() => {
-              console.log(this.props.todo.someExtraData.thisObj2)
+              console.log(`todo.someExtraData.thisObj2: ${todo.someExtraData.thisObj2}`)
               completeTodo(todo.id)
             }}
           />

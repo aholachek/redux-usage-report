@@ -85,7 +85,8 @@ class ReduxUsageMonitor extends Component {
 
   componentDidMount() {
     this.updateReport()
-    window.reduxReport.setOnChangeCallback(this.updateReport)
+    // not sure why this bind is necessary
+    window.reduxReport.setOnChangeCallback(this.updateReport.bind(this))
   }
 
   componentWillUnmount() {
@@ -94,22 +95,12 @@ class ReduxUsageMonitor extends Component {
 
   updateReport = () => {
     const report = window.reduxReport.generate()
-    if (!isEqual(this.state.used, report.used)) {
-      this.setState(() => ({
-        used: report.used,
-        stateCopy: report.stateCopy
-      }))
-    }
-  }
-
-  componentDidUpdate = (prevProps, prevState) => {
-    if (prevProps.computedStates.length !== this.props.computedStates.length) {
-      const report = window.reduxReport.generate()
-      this.setState(() => ({
-        used: report.used,
-        stateCopy: report.stateCopy
-      }))
-    }
+    if (isEqual(report.used, this.state.used) && isEqual(report.stateCopy, this.state.stateCopy))
+      return
+    this.setState({
+      used: report.used,
+      stateCopy: report.stateCopy
+    })
   }
 
   setBreakpoint = breakpointPath => {

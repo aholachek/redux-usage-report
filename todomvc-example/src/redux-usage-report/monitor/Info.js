@@ -96,7 +96,7 @@ var Info = function Info(_ref) {
           null,
           _react2.default.createElement(
             "pre",
-            null,
+            { style: { maxWidth: "100%", overflowY: "scroll" } },
             _react2.default.createElement(
               "code",
               null,
