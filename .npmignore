@@ -2,6 +2,12 @@ src
 todomvc-example
 node_modules
 .babelrc
+.vscode
+.cache
+.yarn-error.log
 __tests__
 .eslintrc
-gifs
+images
+
+redux_report--unused.json
+redux_report--used.json
