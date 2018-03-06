@@ -1,6 +1,6 @@
 # Redux Usage Report
 
-This library tracks the way your app is using the data in your Redux store. By setting up the monitor in devtools you can see a live view of when different parts of your store are accessed:
+This library tracks the way your app is actually using the data in your Redux store. By setting up the monitor in devtools you can see a live view of when different parts of your store are accessed:
 
 ![Redux usage monitor in action](./images/redux-usage.gif)
 
@@ -61,9 +61,11 @@ Please make sure to [only include the devtools for your development build!](http
 
 ## How to use it
 
-The json view of your store will show the parts that have been not accessed at reduced opacity, as well as an esimate of the total percentage of your store that has been used so far by your app.
+The json view of your store will show the parts that have been not accessed at reduced opacity, as well as an estimate of the total percentage of your store that has been used so far by your app.
 
-You can set a breakpoint by doing `shift + click` on any key. The next time the key is accessed, the debugger will stop execution. Feel free to reload the page, the breakpoint will persist until you remove it by holding `shift` and clicking it again.
+## Set a breakpoint
+
+You can set a breakpoint by doing `shift + click` on any key in the json view. The next time the key is accessed, the debugger will stop execution. Feel free to reload the page, the breakpoint will persist until you remove it by holding `shift` and clicking it again.
 
 ![Setting a breakpoint](./images/breakpoint.gif)
 
