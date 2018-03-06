@@ -35,7 +35,7 @@ export default createDevTools(
 
 ## 3. Add the `generateReduxReport` and the `DevTools.instrument` store enhancers
 
-Make sure to put the `DevTools.instrument()` call last in the order of composed functions.
+*Make sure to put the `DevTools.instrument()` call last in the order of composed functions.*
 
 `configureStore.js`
 ```js
@@ -47,7 +47,7 @@ import DevTools from '../DevTools';
 
 const enhancer = compose(
   generateReduxReport(),
-   // DevTools.instrument() should go last
+  // DevTools.instrument() should go last
   DevTools.instrument()
   )
 
