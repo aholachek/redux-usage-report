@@ -12,8 +12,6 @@
   "license": "ISC",
   "dependencies": {
     "deep-object-diff": "^1.0.4",
-    "fs": "^0.0.1-security",
-    "install": "^0.10.4",
     "lodash.debounce": "^4.0.8",
     "lodash.isequal": "^4.5.0",
     "prop-types": "^15.6.0",
@@ -34,6 +32,8 @@
     "babel-preset-react": "^6.24.1",
     "babel-runtime": "^6.26.0",
     "eslint": "^4.1.1",
+    "eslint-config-react-app": "^2.1.0",
+    "eslint-plugin-flowtype": "^2.34.1",
     "eslint-plugin-import": "^2.6.0",
     "eslint-plugin-jsx-a11y": "^5.1.1",
     "eslint-plugin-node": "^5.2.1",
