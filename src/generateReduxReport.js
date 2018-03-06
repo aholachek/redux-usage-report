@@ -7,7 +7,8 @@ import debounce from "lodash.debounce"
 // we need source maps for the stack traces
 // or else we won't know whether to ignore object access
 // from non-local code (e.g node_modules, browser extensions...)
-// this takes the stack trace file name from e.g.  fileName: "http://localhost:3001/static/js/bundle.js",
+// this takes the stack trace file name from e.g.  
+// fileName: "http://localhost:3001/static/js/bundle.js",
 // to "http://localhost:3000/Users/alexholachek/Desktop/work/redux-usage-report/todomvc-example/src/containers/App.js
 // this raises an error during jest tests so limit to development
 if (process.env.NODE_ENV === "development") {
@@ -51,6 +52,8 @@ const shouldSkipProxy = () => {
   return false
 }
 
+// this function takes a reducer and returns 
+// an augmented reducer that tracks redux usage
 function generateReduxReport(global, rootReducer) {
   globalObjectCache = globalObjectCache || global
   global.reduxReport = global.reduxReport || {
@@ -94,39 +97,27 @@ function generateReduxReport(global, rootReducer) {
       global.reduxReport.onChangeCallback && global.reduxReport.onChangeCallback(stateLocation)
   })
 
+  // this function replaces the previous root reducer
+  // it will break if the DevTools.instrument() call came before generateReduxReport
+  // in the compose order
   return (prevState, action) => {
     global.reduxReport.__reducerInProgress = true
     const state = rootReducer(prevState, action)
+    const proxiedState = makeProxy(state)
+    global.reduxReport.__reducerInProgress = false
 
-    const usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === "number"
-
-    const callChangeListener = () => {
-      if (global.reduxReport.onChangeCallback)
-        setTimeout(() => global.reduxReport.onChangeCallback(""), 1)
-    }
-
-    if (usingReduxDevTools) {
-      state.computedStates[state.currentStateIndex].state = makeProxy(
-        state.computedStates[state.currentStateIndex].state
-      )
-      global.reduxReport.__reducerInProgress = false
-      global.reduxReport.state = state.computedStates[state.currentStateIndex].state
-      callChangeListener()
-      return state
-    } else {
-      const proxiedState = makeProxy(state)
-      global.reduxReport.__reducerInProgress = false
-      global.reduxReport.state = proxiedState
-      callChangeListener()
-      return proxiedState
-    }
+    global.reduxReport.state = proxiedState
+    if (global.reduxReport.onChangeCallback)
+      setTimeout(() => global.reduxReport.onChangeCallback(""), 1)
+    return proxiedState
   }
 }
 
 // "next" is either createStore or a wrapped version from another enhancer
 const storeEnhancer = (global = window) => next => (reducer, ...args) => {
   const wrappedReducer = generateReduxReport(global, reducer)
-  return next(wrappedReducer, ...args)
+  const store = next(wrappedReducer, ...args)
+  return { ...store, replaceReducer: nextReducer => generateReduxReport(global, nextReducer) }
 }
 
 export default storeEnhancer

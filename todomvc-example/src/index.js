@@ -11,8 +11,8 @@ import generateReduxReport from "./redux-usage-report"
 import DevTools from "./containers/DevTools"
 
 const enhancer = compose(
-  DevTools.instrument(),
   generateReduxReport(),
+  DevTools.instrument(),
   persistState(window.location.href.match(/[?&]debug_session=([^&#]+)\b/))
 )
 

@@ -4,6 +4,10 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
+var _extends2 = require("babel-runtime/helpers/extends");
+
+var _extends3 = _interopRequireDefault(_extends2);
+
 var _stringify = require("babel-runtime/core-js/json/stringify");
 
 var _stringify2 = _interopRequireDefault(_stringify);
@@ -31,7 +35,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 // we need source maps for the stack traces
 // or else we won't know whether to ignore object access
 // from non-local code (e.g node_modules, browser extensions...)
-// this takes the stack trace file name from e.g.  fileName: "http://localhost:3001/static/js/bundle.js",
+// this takes the stack trace file name from e.g.  
+// fileName: "http://localhost:3001/static/js/bundle.js",
 // to "http://localhost:3000/Users/alexholachek/Desktop/work/redux-usage-report/todomvc-example/src/containers/App.js
 // this raises an error during jest tests so limit to development
 if (process.env.NODE_ENV === "development") {
@@ -72,6 +77,8 @@ var shouldSkipProxy = function shouldSkipProxy() {
   return false;
 };
 
+// this function takes a reducer and returns 
+// an augmented reducer that tracks redux usage
 function generateReduxReport(global, rootReducer) {
   globalObjectCache = globalObjectCache || global;
   global.reduxReport = global.reduxReport || {
@@ -119,31 +126,20 @@ function generateReduxReport(global, rootReducer) {
     }
   });
 
+  // this function replaces the previous root reducer
+  // it will break if the DevTools.instrument() call came before generateReduxReport
+  // in the compose order
   return function (prevState, action) {
     global.reduxReport.__reducerInProgress = true;
     var state = rootReducer(prevState, action);
+    var proxiedState = makeProxy(state);
+    global.reduxReport.__reducerInProgress = false;
 
-    var usingReduxDevTools = state.computedStates && typeof state.currentStateIndex === "number";
-
-    var callChangeListener = function callChangeListener() {
-      if (global.reduxReport.onChangeCallback) setTimeout(function () {
-        return global.reduxReport.onChangeCallback("");
-      }, 1);
-    };
-
-    if (usingReduxDevTools) {
-      state.computedStates[state.currentStateIndex].state = makeProxy(state.computedStates[state.currentStateIndex].state);
-      global.reduxReport.__reducerInProgress = false;
-      global.reduxReport.state = state.computedStates[state.currentStateIndex].state;
-      callChangeListener();
-      return state;
-    } else {
-      var proxiedState = makeProxy(state);
-      global.reduxReport.__reducerInProgress = false;
-      global.reduxReport.state = proxiedState;
-      callChangeListener();
-      return proxiedState;
-    }
+    global.reduxReport.state = proxiedState;
+    if (global.reduxReport.onChangeCallback) setTimeout(function () {
+      return global.reduxReport.onChangeCallback("");
+    }, 1);
+    return proxiedState;
   };
 }
 
@@ -157,7 +153,10 @@ var storeEnhancer = function storeEnhancer() {
       }
 
       var wrappedReducer = generateReduxReport(global, reducer);
-      return next.apply(undefined, [wrappedReducer].concat(args));
+      var store = next.apply(undefined, [wrappedReducer].concat(args));
+      return (0, _extends3.default)({}, store, { replaceReducer: function replaceReducer(nextReducer) {
+          return generateReduxReport(global, nextReducer);
+        } });
     };
   };
 };
