@@ -1,14 +1,14 @@
 {
   "name": "redux-usage-report",
   "version": "1.2.0",
-  "description": "",
+  "description": "A Redux devtools monitor focused on your app's usage of the Redux store",
   "main": "dist/index.js",
   "scripts": {
     "test": "NODE_ENV=test jest",
     "build": "NODE_ENV=production ./node_modules/.bin/babel src -d dist --ignore node_modules,src/lib; cp -r src/lib dist/",
     "prepublish": "npm run build"
   },
-  "author": "",
+  "author": "Alex Holachek",
   "license": "ISC",
   "dependencies": {
     "deep-object-diff": "^1.0.4",
