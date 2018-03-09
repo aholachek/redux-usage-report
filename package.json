@@ -1,6 +1,6 @@
 {
   "name": "redux-usage-report",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A Redux devtools monitor focused on your app's usage of the Redux store",
   "main": "dist/index.js",
   "scripts": {
