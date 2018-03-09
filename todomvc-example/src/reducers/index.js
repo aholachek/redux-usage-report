@@ -1,10 +1,10 @@
 import { combineReducers } from "redux"
 import todos from "./todos"
-import unused from "./unused"
+import demoArray from "./demoArray"
 
 const rootReducer = combineReducers({
   todos,
-  unused
+  demo: demoArray
 })
 
 export default rootReducer

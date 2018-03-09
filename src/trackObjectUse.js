@@ -25,7 +25,11 @@ export const createMakeProxyFunction = ({
         if (propKey === UNPROXIED_OBJ_KEY) return target
         const value = target[propKey]
 
-        if (!Object.hasOwnProperty.call(target, propKey)) return value
+        if (
+          !Object.hasOwnProperty.call(target, propKey) ||
+          (Array.isArray(target) && propKey === "length")
+        )
+          return value
 
         if (shouldSkipProxy()) return value
 

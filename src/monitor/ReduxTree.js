@@ -34,7 +34,8 @@ class ReduxTree extends Component {
     let used = this.props.used
     for (let i = 0; i < path.length; i++) {
       used = used[path[i]]
-      if (typeof used === "undefined") return false
+      // null is used as placeholders in arrays
+      if (used === undefined || used === null) return false
     }
     return true
   }
