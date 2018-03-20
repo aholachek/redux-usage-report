@@ -9,6 +9,11 @@
     "prepublish": "npm run build"
   },
   "author": "Alex Holachek",
+
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aholachek/redux-usage-report"
+  },
   "license": "ISC",
   "dependencies": {
     "deep-object-diff": "^1.0.4",
