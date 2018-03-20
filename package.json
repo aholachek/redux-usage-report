@@ -1,6 +1,6 @@
 {
   "name": "redux-usage-report",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "A Redux devtools monitor focused on your app's usage of the Redux store",
   "main": "dist/index.js",
   "scripts": {
@@ -9,7 +9,6 @@
     "prepublish": "npm run build"
   },
   "author": "Alex Holachek",
-
   "repository": {
     "type": "git",
     "url": "https://github.com/aholachek/redux-usage-report"
