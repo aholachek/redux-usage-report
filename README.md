@@ -17,7 +17,7 @@ yarn add redux-usage-report redux-devtools redux-devtools-dock-monitor
 
 ## 2. Create the DevTools component
 
-`DevTools.js`
+Create a file called `DevTools.js` (or whatever you'd like to call it) and paste the following code in:
 ```js
 import React from 'react';
 import { createDevTools } from 'redux-devtools';
@@ -33,21 +33,25 @@ export default createDevTools(
 );
 ```
 
-## 3. Add the `generateReduxReport` and the `DevTools.instrument` store enhancers
+## 3. Add the `generateReduxReport` and the `DevTools.instrument` store enhancers to your store:
 
 *Make sure to put the `DevTools.instrument()` call last in the order of composed functions.*
+
+Your code might look something like this:
 
 `configureStore.js`
 ```js
 import { createStore, applyMiddleware, compose } from "redux"
-import rootReducer from "platform/state/reducers"
-
+import thunk from 'redux-thunk'
 import generateReduxReport from "redux-usage-report"
-import DevTools from '../DevTools';
+
+import rootReducer from "./reducers"
+import DevTools from './DevTools';
 
 const enhancer = compose(
+  applyMiddleware(thunk),
   generateReduxReport(),
-  // DevTools.instrument() should go last
+  // DevTools.instrument() must go last
   DevTools.instrument()
   )
 
@@ -64,7 +68,7 @@ Please make sure to [only include the devtools for your development build!](http
 
 ## How to use it
 
-The json view of your store will show the parts that have been not accessed at reduced opacity, as well as an estimate of the total percentage of your store that has been used so far by your app.
+The json view of your store will show the parts that have been not accessed at reduced opacity, as well as an estimate of the total percentage of your store that has been used so far by your app. (The percentage is calculated by comparing the string length of the `json` comprising the used portion of the store, with the `json` string containing the entire store.)
 
 ## Set a breakpoint
 
