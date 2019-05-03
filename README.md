@@ -12,7 +12,7 @@ If you want to know exactly when a certain value is being accessed, you can set 
 ## 1. Install the required libs
 
 ```js
-yarn install redux-usage-report redux-devtools redux-devtools-dock-monitor
+yarn add redux-usage-report redux-devtools redux-devtools-dock-monitor
 ```
 
 ## 2. Create the DevTools component
