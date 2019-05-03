@@ -25,11 +25,13 @@ import DockMonitor from 'redux-devtools-dock-monitor';
 import { UsageMonitor } from 'redux-usage-report';
 
 export default createDevTools(
-  <DockMonitor toggleVisibilityKey='ctrl-h'
-               changePositionKey='ctrl-q'
-               changeMonitorKey='ctrl-m'>
-    <UsageMonitor />
-  </DockMonitor>
+	<DockMonitor
+		toggleVisibilityKey="ctrl-h"
+		changePositionKey="ctrl-q"
+		changeMonitorKey="ctrl-m"
+	>
+		<UsageMonitor />
+	</DockMonitor>
 );
 ```
 
