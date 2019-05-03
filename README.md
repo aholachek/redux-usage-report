@@ -19,20 +19,21 @@ yarn add redux-usage-report redux-devtools redux-devtools-dock-monitor
 
 Create a file called `DevTools.js` (or whatever you'd like to call it) and paste the following code in:
 ```js
-import React from 'react';
-import { createDevTools } from 'redux-devtools';
-import DockMonitor from 'redux-devtools-dock-monitor';
-import { UsageMonitor } from 'redux-usage-report';
+import React from "react";
+import { createDevTools } from "redux-devtools";
+import DockMonitor from "redux-devtools-dock-monitor";
+import { UsageMonitor } from "redux-usage-report";
 
 export default createDevTools(
-	<DockMonitor
-		toggleVisibilityKey="ctrl-h"
-		changePositionKey="ctrl-q"
-		changeMonitorKey="ctrl-m"
-	>
-		<UsageMonitor />
-	</DockMonitor>
+  <DockMonitor
+    toggleVisibilityKey="ctrl-h"
+    changePositionKey="ctrl-q"
+    changeMonitorKey="ctrl-m"
+  >
+    <UsageMonitor />
+  </DockMonitor>
 );
+
 ```
 
 ## 3. Add the `generateReduxReport` and the `DevTools.instrument` store enhancers to your store:
