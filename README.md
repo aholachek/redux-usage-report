@@ -4,10 +4,14 @@ This library tracks the way your app is actually using the data in your Redux st
 
 ![Redux usage monitor in action](./images/redux-usage.gif)
 
-If you want to know exactly when a certain value is being accessed, you can set a breakpoint to explore the call stack when the app touches that particular value.
+To find out exactly when a certain value is being accessed, you can [set a breakpoint](#set-a-breakpoint) to explore the call stack when the app touches that particular value.
+
+You can also use `redux-usage-report` as a performance tool to [find unnecessarily fetched data in your app.](#find-unused-data)
+
 
 ## Demo
 [Try it out on the TodoMVC app here.](https://elite-orange.surge.sh/?debug_session=test)
+
 
 ## 1. Install the required libs
 
@@ -69,6 +73,10 @@ The easiest way to do this is just render the `<DevTools/>` component in your Ap
 
 Please make sure to [only include the devtools for your development build!](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md#exclude-devtools-from-production-builds)
 
+
+## 4. Temporarily disable the `Redux Devtools` browser extension
+For the in-app `Redux Devtools` monitor to work, your `Redux DevTools` browser extension must be disabled (otherwise there are 2 copies trying to run at the same time).
+
 ## How to use it
 
 The json view of your store will show the parts that have been not accessed at reduced opacity, as well as an estimate of the total percentage of your store that has been used so far by your app. (The percentage is calculated by comparing the string length of the `json` comprising the used portion of the store, with the `json` string containing the entire store.)
@@ -79,6 +87,20 @@ You can set a breakpoint by doing `shift + click` on any key in the json view. T
 
 ![Setting a breakpoint](./images/breakpoint.gif)
 
+
+## Find unused data
+
+Load the monitor in the app, and visit all pages you want to test in your browser. Once you've done all required interactions, open your browser console and type
+
+```js
+copy(reduxReport.generate().unused)
+```
+note: this works best in Chrome
+
+You can now paste that `JSON` object into a file to see which parts of your redux store have remained completely untouched. You might be able to get rid of some data fetching entirely, or simply be more thoughtful about when data is fetched, to speed up your app.
+
+
+
 ## How it works
 
 The `generateReduxReport` enhancer wraps the store in a proxy, so that each object access can be tracked.
@@ -88,7 +110,7 @@ It tries to be smart about ignoring object accesses that come from outside your 
 If you are curious as to why a value is marked "accessed", you can always `shift + click` the relevant key in the monitor to set a breakpoint.
 
 ## Performance
-If you notice any performance issues, you can speed things up by turning off the most expensive check (whether to ignore object access that originates from `node_modules`) by typing in the console:
+If you notice any performance issues, (you probably will in an app with a larger redux store) you can speed things up by turning off the most expensive check (whether to ignore object access that originates from `node_modules`) by typing in the console:
  ```
  reduxReport.__skipAccessOriginCheck = true
  ```
