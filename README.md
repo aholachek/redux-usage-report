@@ -74,7 +74,7 @@ The easiest way to do this is just render the `<DevTools/>` component in your Ap
 Please make sure to [only include the devtools for your development build!](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md#exclude-devtools-from-production-builds)
 
 
-## 4. Temporarily disable the `Redux Devtools` browser extension
+## 4. Temporarily disable the Redux Devtools browser extension
 For the in-app `Redux Devtools` monitor to work, your `Redux DevTools` browser extension must be disabled (otherwise there are 2 copies trying to run at the same time).
 
 ## How to use it
@@ -90,14 +90,15 @@ You can set a breakpoint by doing `shift + click` on any key in the json view. T
 
 ## Find unused data
 
-Load the monitor in the app, and visit all pages you want to test in your browser. Once you've done all required interactions, open your browser console and type
+*Note: This works best in Chrome.*
+
+Load the monitor in the app as described above, and visit all pages you want to test. Make sure to perform any required UI interactions to trigger data fetching or data usage. Then, open your browser console and type
 
 ```js
 copy(reduxReport.generate().unused)
 ```
-note: this works best in Chrome
 
-You can now paste that `JSON` object into a file to see which parts of your redux store have remained completely untouched. You might be able to get rid of some data fetching entirely, or simply be more thoughtful about when data is fetched, to speed up your app.
+You can now paste that `JSON` object into a file to see which parts of your redux store have remained completely untouched. You might be able to get rid of some data fetching entirely, or simply be more thoughtful about when data is fetched, in order to speed up your app.
 
 
 
