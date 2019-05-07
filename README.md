@@ -12,14 +12,16 @@ You can also use `redux-usage-report` as a performance tool to [find unnecessari
 ## Demo
 [Try it out on the TodoMVC app here.](https://elite-orange.surge.sh/?debug_session=test)
 
+## Quickstart
 
-## 1. Install the required libs
+
+### 1. Install the required libs
 
 ```js
 yarn add redux-usage-report redux-devtools redux-devtools-dock-monitor
 ```
 
-## 2. Create the DevTools component
+### 2. Create the DevTools component
 
 Create a file called `DevTools.js` (or whatever you'd like to call it) and paste the following code in:
 ```js
@@ -40,7 +42,7 @@ export default createDevTools(
 
 ```
 
-## 3. Add the `generateReduxReport` and the `DevTools.instrument` store enhancers to your store:
+### 3. Add the `generateReduxReport` and the `DevTools.instrument` store enhancers to your store:
 
 *Make sure to put the `DevTools.instrument()` call last in the order of composed functions.*
 
@@ -65,7 +67,7 @@ const enhancer = compose(
 const store = createStore(rootReducer, initialState, enhancer)
 ```
 
-## 3. Render `<DevTools/>` into the app
+### 3. Render `<DevTools/>` into the app
 
 The easiest way to do this is just render the `<DevTools/>` component in your App component.
 
@@ -74,7 +76,7 @@ The easiest way to do this is just render the `<DevTools/>` component in your Ap
 Please make sure to [only include the devtools for your development build!](https://github.com/gaearon/redux-devtools/blob/master/docs/Walkthrough.md#exclude-devtools-from-production-builds)
 
 
-## 4. Temporarily disable the Redux Devtools browser extension
+### 4. Temporarily disable the Redux Devtools browser extension
 For the in-app `Redux Devtools` monitor to work, your `Redux DevTools` browser extension must be disabled (otherwise there are 2 copies trying to run at the same time).
 
 ## How to use it
